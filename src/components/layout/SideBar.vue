@@ -19,5 +19,5 @@
 </template>
 
 <script setup>
-    import avatar from '@/assets/img/avatar.jpg'
+import avatar from '@/assets/img/avatar.jpg'
 </script>

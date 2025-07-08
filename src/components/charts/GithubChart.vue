@@ -1,5 +1,9 @@
 <template>
-  <div ref="calEl" class="w-full h-48"></div>
+  <div class="bg-white rounded-2xl p-6 shadow-md">
+    <h3 class="text-md font-semibold mb-2">Tarefas por mês</h3>
+    <p class="text-xs text-gray-500 mb-4">263 tarefas no ano passado</p>
+    <div ref="calEl" class="w-full h-48"></div>
+  </div>
 </template>
 
 <script setup>
@@ -11,7 +15,7 @@ const cal = new CalHeatmap();
 const calEl = ref(null);
 
 onMounted(async () => {
-  await nextTick(); // Garante que o DOM foi montado
+  await nextTick();
 
   const observer = new IntersectionObserver(
     async ([entry]) => {
@@ -20,22 +24,11 @@ onMounted(async () => {
           await cal.paint({
             itemSelector: calEl.value,
             range: 12,
-            domain: {
-              type: 'month',
-              gutter: 4,
-            },
-            subDomain: {
-              type: 'day',
-              radius: 2,
-              width: 12,
-              height: 12,
-            },
-            date: {
-              start: new Date(),
-            },
+            domain: { type: 'month', gutter: 4 },
+            subDomain: { type: 'day', radius: 2, width: 12, height: 12 },
+            date: { start: new Date() },
             data: {
               source: async () => {
-                // Exemplo de dados mockados
                 return {
                   [new Date().toISOString().split('T')[0]]: 5,
                 };
@@ -52,7 +45,7 @@ onMounted(async () => {
             },
           });
         } catch (err) {
-          console.error('❌ Erro ao pintar CalHeatmap:', err);
+          console.error('Erro ao pintar CalHeatmap:', err);
         } finally {
           observer.disconnect();
         }
@@ -61,8 +54,8 @@ onMounted(async () => {
     { threshold: 0.1 }
   );
 
-  if (calEl.value) {
-    observer.observe(calEl.value);
-  }
+  if (calEl.value) observer.observe(calEl.value);
 });
 </script>
+
+

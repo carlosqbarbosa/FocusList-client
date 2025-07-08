@@ -1,5 +1,6 @@
 <template>
   <header class="flex items-center justify-between px-8 py-4 bg-white shadow-sm">
+    <img src="@/assets/img/logo.png" alt="logo" class="w-6 h-6" />
     <h1 class="text-2xl font-bold text-gray-800">
       Welcome back, <span class="text-blue-600">Camila 👋</span>
     </h1>
