@@ -5,81 +5,99 @@
     <div class="flex-1 flex flex-col">
       <TheHeader />
 
-      <main class="flex-1 flex flex-col items-center justify-center px-4 py-8 gap-8">
-        <section class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
-          <h1 class="text-3xl font-extrabold text-blue-600 mb-6">Modo Pomodoro</h1>
-          <p class="text-5xl font-mono text-gray-700 tracking-widest mb-6">
-            {{ formatTime(timer) }}
-          </p>
+      <div class="flex flex-col items-center justify-center text-center p-6 bg-white rounded shadow-md w-full max-w-4xl mx-auto">
+        <!-- Título e Timer -->
+        <h2 class="text-2xl font-bold mb-4">{{ currentLabel }}</h2>
+        <div class="text-6xl font-mono mb-6">{{ formattedTime }}</div>
 
-          <div class="flex justify-center gap-4">
-            <button
-              @click="startTimer"
-              class="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
-            >
-            Iniciar
-            </button>
-            <button
-              @click="resetTimer"
-              class="flex items-center gap-2 bg-blue-400 text-white px-5 py-3 rounded-lg hover:bg-blue-500 transition"
-            >
-            Resetar
-            </button>
-          </div>
-        </section>
-        <p
-          v-if="timerEnded"
-          class="mt-4 text-red-600 font-semibold text-lg animate-pulse"
-        >
-          ⏰ Tempo encerrado! Faça uma pausa.
-        </p>
+        <!-- Controles do Timer -->
+        <div class="flex gap-4 mb-6">
+          <button @click="startTimer" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Start</button>
+          <button @click="pauseTimer" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Pause</button>
+          <button @click="resetTimer" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Reset</button>
+        </div>
 
-        <section class="w-full max-w-4xl">
-          <ToDO />
-        </section>
-      </main>
+        <!-- Modos Pomodoro -->
+        <div class="flex gap-2 mb-10">
+          <button @click="setMode('focus')" :class="mode === 'focus' ? activeClass : defaultClass">Focus</button>
+          <button @click="setMode('short')" :class="mode === 'short' ? activeClass : defaultClass">Short Break</button>
+          <button @click="setMode('long')" :class="mode === 'long' ? activeClass : defaultClass">Long Break</button>
+        </div>
+
+        <!-- Lista de Tarefas -->
+        <ToDo />
+      </div>
     </div>
   </div>
 </template>
 
-
-
 <script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import ToDo from '../components/ToDo.vue'
 import Sidebar from '../components/layout/Sidebar.vue'
 import TheHeader from '../components/layout/TheHeader.vue'
-import ToDO from '../components/ToDo.vue'
-import { ref } from 'vue'
 
-const timer = ref(25 * 60)
-const timerEnded = ref(false)
-let intervalId = null
+
+const mode = ref('focus')
+const timeLeft = ref(25 * 60)
+const timer = ref(null)
+const isRunning = ref(false)
+
+const durations = {
+  focus: 25 * 60,
+  short: 5 * 60,
+  long: 15 * 60
+}
+
+const labels = {
+  focus: 'Focus Time',
+  short: 'Short Break',
+  long: 'Long Break'
+}
+
+const currentLabel = computed(() => labels[mode.value])
+
+const formattedTime = computed(() => {
+  const minutes = Math.floor(timeLeft.value / 60)
+  const seconds = timeLeft.value % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+})
 
 function startTimer() {
-  if (intervalId) return
-  timerEnded.value = false
-  intervalId = setInterval(() => {
-    if (timer.value > 0) {
-      timer.value--
-    } else {
-      clearInterval(intervalId)
-      intervalId = null
-      timerEnded.value = true
-    }
-  }, 1000)
+  if (!isRunning.value) {
+    timer.value = setInterval(() => {
+      if (timeLeft.value > 0) {
+        timeLeft.value--
+      } else {
+        pauseTimer()
+        alert(`${labels[mode.value]} ended!`)
+      }
+    }, 1000)
+    isRunning.value = true
+  }
+}
+
+function pauseTimer() {
+  clearInterval(timer.value)
+  isRunning.value = false
 }
 
 function resetTimer() {
-  clearInterval(intervalId)
-  intervalId = null
-  timer.value = 25 * 60
-  timerEnded.value = false
+  pauseTimer()
+  timeLeft.value = durations[mode.value]
 }
 
-function formatTime(seconds) {
-  const m = String(Math.floor(seconds / 60)).padStart(2, '0')
-  const s = String(seconds % 60).padStart(2, '0')
-  return `${m}:${s}`
+function setMode(newMode) {
+  mode.value = newMode
+  resetTimer()
 }
+
+const activeClass = 'bg-blue-700 text-white px-3 py-1 rounded'
+const defaultClass = 'bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-300'
+
+onUnmounted(() => pauseTimer())
+onMounted(() => resetTimer())
 </script>
+
 
 

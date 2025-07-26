@@ -6,18 +6,50 @@
         <span>Camila Silva</span>
       </div>
       <nav class="space-y-2">
-        <button class="block w-full text-left hover:bg-blue-700 p-2 rounded">General</button>
-        <button class="block w-full text-left hover:bg-blue-700 p-2 rounded">Pomodoro</button>
-        <button class="block w-full text-left hover:bg-blue-700 p-2 rounded">My Task</button>
-        <button class="block w-full text-left hover:bg-blue-700 p-2 rounded">Task Categories</button>
-        <button class="block w-full text-left hover:bg-blue-700 p-2 rounded">Settings</button>
-        <button class="block w-full text-left hover:bg-blue-700 p-2 rounded">Help</button>
+        <router-link
+          to="/"
+          :class="linkClass('/')"
+        >General</router-link>
+
+        <router-link
+          to="/pomodoro"
+          :class="linkClass('/pomodoro')"
+        >Pomodoro</router-link>
+
+        <router-link
+          to="/tasks"
+          :class="linkClass('/tasks')"
+        >My Task</router-link>
+
+        <router-link
+          to="/categories"
+          :class="linkClass('/categories')"
+        >Task Categories</router-link>
+
+        <router-link
+          to="/settings"
+          :class="linkClass('/settings')"
+        >Settings</router-link>
+
+        <router-link
+          to="/help"
+          :class="linkClass('/help')"
+        >Help</router-link>
       </nav>
     </div>
-    <button class="text-left hover:bg-blue-700 p-2 rounded">Logout</button>
+    <router-link to="/logout" class="text-red-300 hover:text-red-400 p-2 rounded">Logout</router-link>
   </aside>
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router'
 import avatar from '@/assets/img/avatar.jpg'
+
+const route = useRoute()
+
+function linkClass(path) {
+  return route.path === path
+    ? 'block bg-white text-blue-900 font-semibold p-2 rounded'
+    : 'block hover:bg-blue-700 p-2 rounded'
+}
 </script>
