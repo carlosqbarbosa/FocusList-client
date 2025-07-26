@@ -37,7 +37,7 @@
         >Help</router-link>
       </nav>
     </div>
-    <router-link to="/logout" class="text-red-300 hover:text-red-400 p-2 rounded">Logout</router-link>
+    <router-link to="/logout" class="text-white hover:text-blue-400 p-2 rounded">Logout</router-link>
   </aside>
 </template>
 

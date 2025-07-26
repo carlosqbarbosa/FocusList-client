@@ -4,21 +4,57 @@
 
     <div class="flex-1 flex flex-col">
       <TheHeader />
+      
+      <div class="flex justify-center items-center flex-col flex-1">
+        <!-- Container Timer -->
+          <div
+            class="w-full max-w-xl rounded-3xl text-white py-10 px-6 mb-10 justify-center"
+            :class="{
+              'bg-blue-800': mode === 'focus',
+              'bg-sky-600': mode === 'short',
+              'bg-teal-600': mode === 'long'
+            }"
+          >
+            <div class="flex justify-center mb-4">
+              <span
+                class="bg-white text-blue-800 font-semibold text-sm px-3 py-1 rounded-full"
+                v-if="mode === 'focus'"
+              >
+                Focus
+              </span>
+              <span
+                class="bg-white text-sky-700 font-semibold text-sm px-3 py-1 rounded-full"
+                v-if="mode === 'short'"
+              >
+                Short Break
+              </span>
+              <span
+                class="bg-white text-teal-700 font-semibold text-sm px-3 py-1 rounded-full"
+                v-if="mode === 'long'"
+              >
+                Long Break
+              </span>
+            </div>
 
-      <div class="flex flex-col items-center justify-center text-center p-6 bg-white rounded shadow-md w-full max-w-4xl mx-auto">
-        <!-- Título e Timer -->
-        <h2 class="text-2xl font-bold mb-4">{{ currentLabel }}</h2>
-        <div class="text-6xl font-mono mb-6">{{ formattedTime }}</div>
+            <div class="text-6xl font-mono text-center mb-8">
+              {{ formattedTime }}
+            </div>
 
-        <!-- Controles do Timer -->
-        <div class="flex gap-4 mb-6">
-          <button @click="startTimer" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Start</button>
-          <button @click="pauseTimer" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Pause</button>
-          <button @click="resetTimer" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Reset</button>
-        </div>
+            <div class="flex justify-center gap-6">
+              <button @click="startTimer" class="bg-white text-blue-800 hover:bg-gray-100 p-3 rounded-full">
+                ▶
+              </button>
+              <button @click="pauseTimer" class="bg-white text-yellow-600 hover:bg-gray-100 p-3 rounded-full">
+                ⏸
+              </button>
+              <button @click="resetTimer" class="bg-white text-red-600 hover:bg-gray-100 p-3 rounded-full">
+                ⟳
+              </button>
+            </div>
+          </div>
 
         <!-- Modos Pomodoro -->
-        <div class="flex gap-2 mb-10">
+        <div class="flex justify-center gap-2 mb-10">
           <button @click="setMode('focus')" :class="mode === 'focus' ? activeClass : defaultClass">Focus</button>
           <button @click="setMode('short')" :class="mode === 'short' ? activeClass : defaultClass">Short Break</button>
           <button @click="setMode('long')" :class="mode === 'long' ? activeClass : defaultClass">Long Break</button>
@@ -27,8 +63,9 @@
         <!-- Lista de Tarefas -->
         <ToDo />
       </div>
+      </div>
+        
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -36,7 +73,6 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import ToDo from '../components/ToDo.vue'
 import Sidebar from '../components/layout/Sidebar.vue'
 import TheHeader from '../components/layout/TheHeader.vue'
-
 
 const mode = ref('focus')
 const timeLeft = ref(25 * 60)
@@ -92,7 +128,7 @@ function setMode(newMode) {
   resetTimer()
 }
 
-const activeClass = 'bg-blue-700 text-white px-3 py-1 rounded'
+const activeClass = 'bg-white text-blue-800 font-semibold px-3 py-1 rounded'
 const defaultClass = 'bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-300'
 
 onUnmounted(() => pauseTimer())
