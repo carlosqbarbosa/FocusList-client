@@ -4,9 +4,9 @@
       <div class="text-xl font-bold mb-6">Camila Silva</div>
 
       <router-link
-        to="/"
-        :class="linkClass('/')"
-      >General</router-link>
+        to="/dahboard"
+        :class="linkClass('/dashboard')"
+      >Dashboard</router-link>
 
       <router-link
         to="/pomodoro"
