@@ -6,13 +6,6 @@
       <main class="bg-gray-100 flex-1 min-h-screen pl-6 pt-6 pr-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Coluna 1: Logo + StatusCard -->
-          <div class="lg:col-span-1">
-            <div class="flex items-center gap-2 mb-4">
-              <img src="@/assets/img/logo.png" alt="logo" class="w-6 h-6" />
-              <span class="text-xl font-semibold text-gray-700">FocusList</span>
-            </div>
-            <StatusCard />
-          </div>
 
           <!-- Coluna 2 e 3: Cabeçalho + Charts -->
           <div class="lg:col-span-2">
