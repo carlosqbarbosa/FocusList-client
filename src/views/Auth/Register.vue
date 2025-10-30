@@ -26,18 +26,19 @@
         </div>
 
         <!-- Título -->
-        <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Sign Up</h2>
+        <h2 class="text-xl font-semibold text-blue-700 mb-6 text-center">Cadastro</h2>
 
         <!-- Formulário -->
         <form @submit.prevent="handleRegister" class="space-y-4">
           <!-- Nome -->
           <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
               <input
-                v-model="firstName"
+                v-model="Nome"
                 type="text"
                 required
-                placeholder="Enter First Name"
+                placeholder="Digite seu primeiro nome"
                 class="w-full focus:outline-none"
               />
             </div>
@@ -45,12 +46,13 @@
 
           <!-- Sobrenome -->
           <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Sobrenome</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
               <input
-                v-model="lastName"
+                v-model="Sobrenome"
                 type="text"
                 required
-                placeholder="Enter Last Name"
+                placeholder="Digite seu sobrenome"
                 class="w-full focus:outline-none"
               />
             </div>
@@ -58,6 +60,7 @@
 
           <!-- Email -->
           <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,7 +70,7 @@
                 v-model="email"
                 type="email"
                 required
-                placeholder="Enter Email"
+                placeholder="Exemplo@email.com"
                 class="w-full focus:outline-none"
               />
             </div>
@@ -75,6 +78,7 @@
 
           <!-- Senha -->
           <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Senhaa</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -84,7 +88,7 @@
                 v-model="password"
                 type="password"
                 required
-                placeholder="Enter Password"
+                placeholder="Digite sua senha"
                 class="w-full focus:outline-none"
               />
             </div>
@@ -94,19 +98,18 @@
           <div class="flex items-center justify-between text-sm text-gray-600">
             <label class="flex items-center">
               <input type="checkbox" class="mr-2" required />
-              I agree to all terms
+              Concordo com os Termos
             </label>
             <router-link to="/login" class="text-blue-600 hover:underline">
-              Already have an account? <span class="font-semibold">Sign In</span>
+              Já possui conta? Faça o <span class="font-semibold">Login</span>
             </router-link>
           </div>
 
-          <!-- Botão -->
           <button
             type="submit"
             class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800 transition"
           >
-            Register
+            Cadastrar
           </button>
         </form>
       </div>
