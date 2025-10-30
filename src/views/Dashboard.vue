@@ -16,7 +16,7 @@
             </div>
             <div class="grid md:grid-cols-2 gap-6">
               <GithubChart />
-              <BarChart />
+              <TarefasConcluidasPorMesCharts />
             </div>
           </div>
         </div>
@@ -26,6 +26,7 @@
 </template>
 
 <script setup>
+import TarefasConcluidasPorMesCharts from '../components/charts/TarefasConcluidasPorMesCharts.vue';
 import Sidebar from '../components/layout/Sidebar.vue'
 import TheHeader from '../components/layout/TheHeader.vue'
 </script>
