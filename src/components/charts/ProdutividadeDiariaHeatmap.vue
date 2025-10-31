@@ -29,10 +29,10 @@ const getColor = (value: number) => {
 
 <style scoped>
 .chart-container {
-  background: white;
+  background: white; 
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+ /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);*/
 }
 .title {
   font-weight: 600;
