@@ -1,38 +1,67 @@
 <template>
-  <div class="flex">
+  <div class="flex bg-gray-100 min-h-screen">
     <Sidebar />
-    <div class="flex-1">
-      <TheHeader />
-      <main class="bg-gray-100 flex-1 min-h-screen pl-6 pt-6 pr-6">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Coluna 1: Logo + StatusCard -->
-          <div class="lg:col-span-1">
-            <div class="flex items-center gap-2 mb-4">
-              <img src="@/assets/img/logo.png" alt="logo" class="w-6 h-6" />
-              <span class="text-xl font-semibold text-gray-700">FocusList</span>
-            </div>
-            <StatusCard />
-          </div>
 
-          <!-- Coluna 2 e 3: Cabeçalho + Charts -->
-          <div class="lg:col-span-2">
-            <div class="flex justify-between items-start">
-              <h1 class="text-2xl font-bold text-gray-800 mb-4">
-                Welcome back, <span class="text-blue-600">Camila 👋</span>
-              </h1>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-              <GithubChart />
-              <BarChart />
-            </div>
-          </div>
+    <div class="flex-1 flex flex-col">
+      <TheHeader />
+
+      <main class="flex-1 p-8 overflow-y-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">
+          Olá, <span class="text-indigo-600">Camila 👋</span>
+        </h1>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-in"
+        >
+          <!-- Primeira linha -->
+          <!--<div class="card"><TarefasConcluidasPorMesChart /></div> -->
+          <!--<div class="card"><HorasFocadasPorMesChart /></div>-->
+         <!-- <div class="card"><TaxaConclusaoDoughnut /></div> -->
+
+          <!-- Segunda linha -->
+          <div class="card md:col-span-2"><PomodoroVsTarefasChart /></div>
+          <!--<div class="card"><DesempenhoSemanalRadar /></div>-->
+
+          <!-- Terceira linha -->
+          <!--<div class="card md:col-span-2"><HistoricoFocoAcumuladoChart /></div> -->
+          <div class="card"><ProdutividadeDiariaHeatmap /></div>
         </div>
       </main>
-    </div> 
+    </div>
   </div>
 </template>
 
 <script setup>
-import Sidebar from '../components/layout/Sidebar.vue'
-import TheHeader from '../components/layout/TheHeader.vue'
+import Sidebar from "../components/layout/Sidebar.vue";
+import TheHeader from "../components/layout/TheHeader.vue";
+//import TarefasConcluidasPorMesChart from "../components/charts/TarefasConcluidasPorMesCharts.vue";
+//import HorasFocadasPorMesChart from "../components/charts/HorasFocadasPorMesChart.vue";
+import ProdutividadeDiariaHeatmap from "../components/charts/ProdutividadeDiariaHeatmap.vue";
+import PomodoroVsTarefasChart from "../components/charts/PomodoroVsTarefasChart.vue";
+//import HistoricoFocoAcumuladoChart from "../components/charts/HistoricoFocoAcumuladoChart.vue";
+//import DesempenhoSemanalRadar from "../components/charts/DesempenhoSemanalRadar.vue";
+//import TaxaConclusaoDoughnut from "../components/charts/TaxaConclusaoDoughnut.vue";
 </script>
+
+<style scoped>
+.card {
+  @apply bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+</style>
+
+
