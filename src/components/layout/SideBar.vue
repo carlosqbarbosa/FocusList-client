@@ -57,7 +57,14 @@
 <script setup>
 import { useRoute } from "vue-router";
 import avatar from "@/assets/img/avatar.jpg";
-
+import {
+  LayoutDashboard,
+  Timer,
+  CheckSquare,
+  Settings,
+  HelpCircle,
+  LogOut,
+} from "lucide-vue-next";
 
 const route = useRoute();
 
