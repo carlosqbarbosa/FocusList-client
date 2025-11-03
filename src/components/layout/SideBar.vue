@@ -1,8 +1,14 @@
 <template>
-  <aside class="bg-blue-900 text-white w-60 min-h-screen p-4 flex flex-col justify-between shadow-lg">
+  <aside
+    class="bg-blue-900 text-white w-60 min-h-screen p-4 flex flex-col justify-between shadow-lg"
+  >
     <div>
       <div class="flex items-center gap-2 mb-8">
-        <img :src="avatar" alt="User" class="rounded-full w-10 h-10 object-cover" />
+        <img
+          :src="avatar"
+          alt="User"
+          class="rounded-full w-10 h-10 object-cover"
+        />
         <span class="font-medium">Camila Silva</span>
       </div>
 
@@ -44,19 +50,29 @@
       </nav>
     </div>
 
-    <router-link
-      to="/logout"
+    <!-- Botão que abre o modal -->
+    <button
+      @click="showModal = true"
       class="flex items-center gap-2 text-white hover:text-blue-400 p-2 rounded transition"
     >
       <LogOut class="w-5 h-5" />
-      <span>Logout</span>
-    </router-link>
+      <span>Sair</span>
+    </button>
+
+    <!-- Modal de confirmação -->
+    <ModalLogout
+      :show="showModal"
+      @confirm="logout"
+      @cancel="showModal = false"
+    />
   </aside>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import avatar from "@/assets/img/avatar.jpg";
+import ModalLogout from "@/components/Modal/ModalLogout.vue";
 import {
   LayoutDashboard,
   Timer,
@@ -67,11 +83,23 @@ import {
 } from "lucide-vue-next";
 
 const route = useRoute();
+const router = useRouter();
+const showModal = ref(false);
 
 function linkClass(path) {
   return route.path === path
     ? "block bg-white text-blue-900 font-semibold p-2 rounded transition"
     : "block hover:bg-blue-700 p-2 rounded transition";
+}
+
+function logout() {
+  showModal.value = false;
+
+  // Aqui você pode limpar sessionStorage, localStorage ou tokens
+  // Exemplo:
+  // localStorage.removeItem("token");
+
+  router.push("/login"); // Redireciona após confirmar
 }
 </script>
 
