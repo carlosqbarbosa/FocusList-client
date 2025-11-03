@@ -27,7 +27,7 @@
           </div>
         </router-link>
 
-        <router-link to="/tasks" :class="linkClass('/tasks')">
+        <router-link to="/mytaskpage" :class="linkClass('/mytaskpage')">
           <div class="flex items-center gap-2">
             <CheckSquare class="w-5 h-5" />
             <span>Minhas Tasks</span>

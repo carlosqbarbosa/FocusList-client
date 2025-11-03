@@ -11,7 +11,7 @@
         Pomodoro
       </router-link>
 
-      <router-link to="/tasks" :class="linkClass('/tasks')">
+      <router-link to="/mytaskpage" :class="linkClass('/mytaskpage')">
         Minhas Tasks
       </router-link>
 

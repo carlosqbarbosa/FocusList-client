@@ -4,6 +4,7 @@ import Login from '../views/Auth/Login.vue'
 import Register from '../views/Auth/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import PomodoroPage from '../views/PomodoroPage.vue'
+import MyTaskPage from '../views/MyTaskPage.vue'
 
 const routes = [
   {
@@ -29,6 +30,12 @@ const routes = [
     path: '/pomodoro',
     name: 'PomodoroPage',
     component: PomodoroPage,
+  },
+  {
+    path: '/mytaskpage',
+    name: 'MyTaskPage',
+    component: MyTaskPage,
+
   },
 ]
 
