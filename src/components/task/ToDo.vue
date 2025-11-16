@@ -11,18 +11,16 @@
         type="text"
         v-model="newTask"
         @keyup.enter="addTask"
-        :disabled="tasks.length >= 5"
         placeholder="Adicione uma nova tarefa..."
         class="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
       />
+
       <button
-        v-if="tasks.length < 5"
         @click="addTask"
         class="flex items-center justify-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-xl hover:bg-blue-800 transition-all"
       >
         <Plus class="w-5 h-5" /> Adicionar
       </button>
-      <p v-else class="text-green-600 font-semibold self-center">Lista completa</p>
     </div>
 
     <!-- Lista de tarefas -->
