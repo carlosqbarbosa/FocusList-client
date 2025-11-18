@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen flex">
-    <!-- Lado Esquerdo (Imagem) -->
     <div class="hidden md:block md:w-1/2 h-screen overflow-hidden bg-gray-100">
       <img
         :src="imgRegister"
@@ -9,10 +8,8 @@
       />
     </div>
 
-    <!-- Lado Direito (Formulário) -->
     <div class="w-full md:w-1/2 flex items-center justify-center bg-white min-h-screen">
       <div class="w-full max-w-sm p-6">
-        <!-- Logo -->
         <div class="flex flex-col items-center mb-8">
           <svg xmlns="http://www.w3.org/2000/svg"
                class="h-10 w-10 text-blue-600 mb-2"
@@ -25,12 +22,9 @@
           <h1 class="text-3xl font-bold text-blue-700">FocusList</h1>
         </div>
 
-        <!-- Título -->
         <h2 class="text-xl font-semibold text-blue-700 mb-6 text-center">Cadastro</h2>
 
-        <!-- Formulário -->
         <form @submit.prevent="handleRegister" class="space-y-4">
-          <!-- Nome -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
@@ -44,7 +38,6 @@
             </div>
           </div>
 
-          <!-- Sobrenome -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Sobrenome</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
@@ -58,7 +51,6 @@
             </div>
           </div>
 
-          <!-- Email -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
@@ -76,7 +68,6 @@
             </div>
           </div>
 
-          <!-- Senha -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
@@ -94,7 +85,6 @@
             </div>
           </div>
 
-          <!-- Termos e redirecionamento -->
           <div class="flex items-center justify-between text-sm text-gray-600">
             <router-link to="/login" class="text-blue-600 hover:underline">
               Já possui conta? Faça o <span class="font-semibold">Login</span>

@@ -19,10 +19,8 @@
             :key="task.id"
             class="hover:bg-gray-50 transition"
           >
-            <!-- Nome da Task -->
             <td class="py-3 px-6 border-b">{{ task.nome }}</td>
 
-            <!-- Dropdown Status -->
             <td class="py-3 px-6 border-b">
               <select
                 v-model="task.status"
@@ -34,7 +32,6 @@
               </select>
             </td>
 
-            <!-- Dropdown Prioridade -->
             <td class="py-3 px-6 border-b">
               <select
                 v-model="task.prioridade"
@@ -46,7 +43,6 @@
               </select>
             </td>
 
-            <!-- Botões de Ação -->
             <td class="py-3 px-6 border-b text-center">
               <div class="flex justify-center gap-3">
                 <button
@@ -71,7 +67,6 @@
       </table>
     </div>
 
-    <!-- Adicionar nova task -->
     <div class="text-right mt-4">
       <button class="text-red-500 hover:text-red-600 text-sm font-medium">
         + Adicionar Task

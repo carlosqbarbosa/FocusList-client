@@ -1,14 +1,10 @@
 <template>
   <div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
     <Sidebar />
 
-    <!-- Conteúdo principal -->
     <div class="flex-1 flex flex-col">
-      <!-- Header -->
       <TheHeader />
 
-      <!-- Conteúdo da página -->
       <main class="flex-1 p-4">
         <MyTasks />
       </main>

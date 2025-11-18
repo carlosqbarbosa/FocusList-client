@@ -11,5 +11,5 @@
 </template>
 
 <script setup>
-// Nenhum conteúdo aqui, pois o logo agora está dentro do grid
+
 </script>

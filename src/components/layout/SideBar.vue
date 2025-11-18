@@ -50,7 +50,6 @@
       </nav>
     </div>
 
-    <!-- Botão que abre o modal -->
     <button
       @click="showModal = true"
       class="flex items-center gap-2 text-white hover:text-blue-400 p-2 rounded transition"
@@ -59,7 +58,6 @@
       <span>Sair</span>
     </button>
 
-    <!-- Modal de confirmação -->
     <ModalLogout
       :show="showModal"
       @confirm="logout"
@@ -94,12 +92,7 @@ function linkClass(path) {
 
 function logout() {
   showModal.value = false;
-
-  // Aqui você pode limpar sessionStorage, localStorage ou tokens
-  // Exemplo:
-  // localStorage.removeItem("token");
-
-  router.push("/login"); // Redireciona após confirmar
+  router.push("/login"); 
 }
 </script>
 

@@ -24,7 +24,6 @@
       </router-link>
     </div>
 
-    <!-- Botão que abre o modal -->
     <button
       @click="showModal = true"
       class="text-red-300 hover:text-red-400 mt-auto font-medium"
@@ -32,7 +31,6 @@
       Sair
     </button>
 
-    <!-- Modal de confirmação -->
     <ModalLogout
       :show="showModal"
       @confirm="logout"
@@ -58,8 +56,6 @@ function linkClass(path) {
 
 function logout() {
   showModal.value = false;
-  // Aqui você pode limpar dados de autenticação
-  // Exemplo: localStorage.removeItem("token");
   router.push("/login");
 }
 </script>

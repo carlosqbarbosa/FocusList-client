@@ -5,7 +5,6 @@
       <h2 class="text-2xl font-bold text-blue-800">Lista de Tarefas</h2>
     </div>
 
-    <!-- Input e botão -->
     <div class="flex flex-col sm:flex-row gap-4 mb-6">
       <input
         type="text"
@@ -23,7 +22,6 @@
       </button>
     </div>
 
-    <!-- Lista de tarefas -->
     <transition-group name="fade" tag="div">
       <div
         v-for="(task, index) in tasks"

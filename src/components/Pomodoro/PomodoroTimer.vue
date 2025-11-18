@@ -5,7 +5,6 @@
       <div class="text-5xl font-mono my-4">{{ formatTime }}</div>
 
       <div class="flex justify-center gap-6 mt-6">
-        <!-- Iniciar -->
         <button
           @click="startTimer"
           :disabled="isRunning"
@@ -18,7 +17,7 @@
           <Play class="w-8 h-8" />
         </button>
 
-        <!-- Pausar -->
+
         <button
           @click="pauseTimer"
           :disabled="!isRunning"
@@ -31,7 +30,7 @@
           <Pause class="w-8 h-8" />
         </button>
 
-        <!-- Resetar -->
+
         <button
           @click="resetTimer"
           aria-label="Resetar"
@@ -58,12 +57,12 @@ import { ref, computed, onBeforeUnmount } from "vue";
 import { Play, Pause, RotateCcw } from "lucide-vue-next";
 import { useSound } from "@vueuse/sound";
 
-// 🔊 Som pronto sem precisar baixar mp3
+
 const { play: playAlarm } = useSound(
   "https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"
 );
 
-/* --- Tempos Pomodoro --- */
+
 const DURATIONS = {
   foco: 25 * 60,
   "pausa-curta": 5 * 60,
@@ -83,7 +82,7 @@ const formatTime = computed(() => {
   return `${m}:${s}`;
 });
 
-/* Iniciar timer */
+
 function startTimer() {
   if (isRunning.value) return;
   isRunning.value = true;
@@ -100,32 +99,31 @@ function startTimer() {
   }, 1000);
 }
 
-/* Pausar */
+
 function pauseTimer() {
   if (timer) clearInterval(timer);
   timer = null;
   isRunning.value = false;
 }
 
-/* Reset */
+
 function resetTimer() {
   pauseTimer();
   time.value = DURATIONS[mode.value];
 }
 
-/* Trocar modo */
+
 function setMode(newMode) {
   mode.value = newMode;
   time.value = DURATIONS[newMode];
   pauseTimer();
 }
 
-/* Cleanup */
 onBeforeUnmount(() => {
   if (timer) clearInterval(timer);
 });
 
-/* Estilos dos botões */
+
 const activeClass = "px-4 py-2 rounded-lg bg-blue-900 text-white";
 const inactiveClass = "px-4 py-2 rounded-lg bg-gray-200 text-blue-900";
 </script>

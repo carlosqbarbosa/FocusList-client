@@ -18,7 +18,6 @@
 </template>
 
 <script setup lang="ts">
-// Simulando dados de produtividade (número de sessões Pomodoro por dia)
 const data = Array.from({ length: 30 }, () => Math.floor(Math.random() * 6))
 
 const getColor = (value: number) => {
@@ -32,7 +31,6 @@ const getColor = (value: number) => {
   background: white; 
   padding: 20px;
   border-radius: 16px;
- /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);*/
 }
 .title {
   font-weight: 600;
