@@ -46,20 +46,44 @@
             <td class="py-3 px-6 border-b text-center">
               <div class="flex justify-center gap-3">
                 <button
+                @click="openDetailsModal(task)"
                   class="bg-blue-900 text-white px-3 py-1 rounded hover:bg-blue-800 transition"
                 >
                   Ver detalhes
                 </button>
+
+                <modalTaskDetails 
+                  :show="showDetailsModal"
+                  :task="selectedTask"
+                  @close="showDetailsModal = false"
+                />
+
                 <button
+                  @click="openEditModal(task)"
                   class="bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-900 transition"
                 >
                   Editar
                 </button>
+                <modalEditTask
+                  :show="showEditModal"
+                  :task="selectedTask"
+                  @close="showEditModal = false"
+                  @save="saveEditedTask"
+                />
+
                 <button
+                  @click="openDeleteModal(task)"
                   class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
                 >
                   Deletar
                 </button>
+
+                <modalDeleteTask 
+                  :show="showDeleteModal"
+                  @deleteTask="deleteTask"
+                  @cancelDelete="cancelDelete"
+                />
+                
               </div>
             </td>
           </tr>
@@ -68,20 +92,102 @@
     </div>
 
     <div class="text-right mt-4">
-      <button class="text-red-500 hover:text-red-600 text-sm font-medium">
+      <button 
+        @click="showModal = true"
+        class="text-red-500 hover:text-red-600 text-sm font-medium"
+      >
         + Adicionar Task
       </button>
+
+      <modalAddTasks
+        :show="showModal"
+        @save="addTask"
+        @cancel="showModal = false"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import modalAddTasks from "@/components/Modal/modalAddTasks.vue";
+import modalDeleteTask from "@/components/Modal/modalDeleteTask.vue";
+import modalTaskDetails from "@/components/Modal/modalTaskDetails.vue";
+import modalEditTask from "@/components/Modal/modalEditTask.vue";
+
+
+const showModal = ref(false);
+const showDeleteModal = ref(false);     
+const taskToDelete = ref(null); 
+const showDetailsModal = ref(false);
+const selectedTask = ref({});
+const showEditModal = ref(false);
+      
+
 
 const tasks = reactive([
   { id: 1, nome: "Estudar React", status: "Completo", prioridade: "Alta" },
   { id: 2, nome: "Fazer projeto", status: "Em progresso", prioridade: "Moderada" },
   { id: 3, nome: "Estudar Node", status: "Não iniciado", prioridade: "Baixa" },
 ]);
+
+function openDeleteModal(task) {
+  taskToDelete.value = task;
+  showDeleteModal.value = true;
+}
+
+
+function deleteTask() {
+  const id = taskToDelete.value.id;
+  const index = tasks.findIndex((task) => task.id === id);
+  if (index !== -1) tasks.splice(index, 1);
+
+  showDeleteModal.value = false;
+  taskToDelete.value = null;
+}
+
+function cancelDelete() {
+  showDeleteModal.value = false;
+  taskToDelete.value = null;
+}
+
+
+function addTask(novaTask) {
+  tasks.push({
+    id: Date.now(),
+    nome: novaTask.titulo,
+    status: "Não iniciado",
+    prioridade: "Moderada",
+    data: novaTask.data,
+    descricao: novaTask.descricao,
+  });
+
+  showModal.value = false;
+}
+
+const openDetailsModal = (task) => {
+  selectedTask.value = task;
+  showDetailsModal.value = true;
+}
+
+function openEditModal(task) {
+  selectedTask.value = task;
+  showEditModal.value = true;
+}
+
+function saveEditedTask(updatedTask) {
+  const id = selectedTask.value.id;
+
+  const index = tasks.findIndex((t) => t.id === id);
+  if (index !== -1) {
+    tasks[index] = { 
+      ...tasks[index], 
+      ...updatedTask 
+    };
+  }
+
+  showEditModal.value = false;
+}
+
 </script>
 

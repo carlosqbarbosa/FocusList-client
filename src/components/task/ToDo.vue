@@ -52,7 +52,6 @@
       </div>
     </transition-group>
 
-    <!-- Rodapé -->
     <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
       <p v-show="pendingTasks > 0" class="text-sm text-gray-700 font-semibold">
         Você tem {{ pendingTasks }} tarefa(s) pendente(s)
