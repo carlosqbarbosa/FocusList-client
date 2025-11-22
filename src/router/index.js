@@ -6,7 +6,6 @@ import Dashboard from '../views/Dashboard.vue'
 import PomodoroPage from '../views/PomodoroPage.vue'
 import MyTaskPage from '../views/MyTaskPage.vue'
 import SettingsPage from '../views/SettingsPage.vue'
-import HelpPage from '../views/HelpPage.vue'
 
 const routes = [
   {
@@ -45,10 +44,10 @@ const routes = [
     component: SettingsPage,
   },
   {
-  path: '/help',
-  name: 'help',
-  component: () => import('../views/HelpPage.vue')
-}
+    path: '/help',
+    name: 'help',
+    component: () => import('../views/HelpPage.vue')
+  }
 ]
 
 const router = createRouter({
