@@ -45,10 +45,10 @@ const routes = [
     component: SettingsPage,
   },
   {
-    path: '/help',
-    name: 'help',
-    component: HelpPage,
-  }
+  path: '/help',
+  name: 'help',
+  component: () => import('../views/HelpPage.vue')
+}
 ]
 
 const router = createRouter({
