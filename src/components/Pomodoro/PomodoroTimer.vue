@@ -75,7 +75,6 @@ const isRunning = ref(false);
 
 let timer = null;
 
-/* Formatador MM:SS */
 const formatTime = computed(() => {
   const m = Math.floor(time.value / 60).toString().padStart(2, "0");
   const s = (time.value % 60).toString().padStart(2, "0");
