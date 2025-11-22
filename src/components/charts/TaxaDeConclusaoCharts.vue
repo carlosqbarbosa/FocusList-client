@@ -20,7 +20,7 @@ const chartData = {
   labels: ["Concluídas", "Pendentes"],
   datasets: [
     {
-      backgroundColor: ["#10B981", "#EF4444"],
+      backgroundColor: ["#6366F1", "#242673"],
       data: [75, 25],
     },
   ],

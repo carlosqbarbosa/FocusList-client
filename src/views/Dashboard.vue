@@ -6,25 +6,36 @@
       <TheHeader />
 
       <main class="flex-1 p-8 overflow-y-auto">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">
+      <!--  <h1 class="text-3xl font-bold text-gray-800 mb-8">
           Olá, <span class="text-indigo-600">Camila 👋</span>
-        </h1>
+        </h1>-->
 
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-in"
-        >
-          <!-- Primeira linha -->
-          <!--<div class="card"><TarefasConcluidasPorMesChart /></div> -->
-          <!--<div class="card"><HorasFocadasPorMesChart /></div>-->
-         <!-- <div class="card"><TaxaConclusaoDoughnut /></div> -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-in">
+          
+          <div class="card">
+            <TarefasConcluidasPorMesChart />
+          </div>
+          <div class="card">
+            <HorasFocadasPorMesChart />
+          </div>
+          <div class="card">
+            <TaxaConclusaoDoughnut />
+          </div>
 
-          <!-- Segunda linha -->
-          <div class="card md:col-span-2"><PomodoroVsTarefasChart /></div>
-          <!--<div class="card"><DesempenhoSemanalRadar /></div>-->
+          <div class="card md:col-span-2">
+            <PomodoroVsTarefasChart />
+          </div>
+          <div class="card">
+            <DesempenhoSemanalRadar />
+          </div> 
 
-          <!-- Terceira linha -->
-          <!--<div class="card md:col-span-2"><HistoricoFocoAcumuladoChart /></div> -->
-          <div class="card"><ProdutividadeDiariaHeatmap /></div>
+          <!--<div class="card md:col-span-2">
+            <HistoricoFocoAcumuladoChart />
+          </div>
+          <div class="card">
+            <ProdutividadeDiariaHeatmap />
+          </div>-->
+
         </div>
       </main>
     </div>
@@ -32,15 +43,17 @@
 </template>
 
 <script setup>
-import Sidebar from "../components/layout/Sidebar.vue";
+// Imports de Layout
+import Sidebar from "../components/layout/SideBar.vue";
 import TheHeader from "../components/layout/TheHeader.vue";
-//import TarefasConcluidasPorMesChart from "../components/charts/TarefasConcluidasPorMesCharts.vue";
-//import HorasFocadasPorMesChart from "../components/charts/HorasFocadasPorMesChart.vue";
-import ProdutividadeDiariaHeatmap from "../components/charts/ProdutividadeDiariaHeatmap.vue";
+
+import TarefasConcluidasPorMesChart from "../components/charts/TarefasConcluidasPorMes.vue";
+import HorasFocadasPorMesChart from "../components/charts/HorasFocadasPorMesCharts.vue";
+// import ProdutividadeDiariaHeatmap from "../components/charts/ProdutividadeDiariaHeatmap.vue";
 import PomodoroVsTarefasChart from "../components/charts/PomodoroVsTarefasChart.vue";
-//import HistoricoFocoAcumuladoChart from "../components/charts/HistoricoFocoAcumuladoChart.vue";
-//import DesempenhoSemanalRadar from "../components/charts/DesempenhoSemanalRadar.vue";
-//import TaxaConclusaoDoughnut from "../components/charts/TaxaConclusaoDoughnut.vue";
+// import HistoricoFocoAcumuladoChart from "../components/charts/HistoricoDeFocoSemanalChart.vue";
+import DesempenhoSemanalRadar from "../components/charts/DesempenhoSemanalCharts.vue";
+import TaxaConclusaoDoughnut from "../components/charts/TaxaDeConclusaoCharts.vue";
 </script>
 
 <style scoped>
