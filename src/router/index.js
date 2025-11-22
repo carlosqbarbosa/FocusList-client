@@ -5,6 +5,8 @@ import Register from '../views/Auth/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import PomodoroPage from '../views/PomodoroPage.vue'
 import MyTaskPage from '../views/MyTaskPage.vue'
+import SettingsPage from '../views/SettingsPage.vue'
+import HelpPage from '../views/HelpPage.vue'
 
 const routes = [
   {
@@ -37,6 +39,16 @@ const routes = [
     component: MyTaskPage,
 
   },
+  {
+    path: '/settings',
+    name: 'SettingsPage',
+    component: SettingsPage,
+  },
+  {
+    path: '/help',
+    name: 'help',
+    component: HelpPage,
+  }
 ]
 
 const router = createRouter({
