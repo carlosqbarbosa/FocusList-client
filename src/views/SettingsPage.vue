@@ -46,18 +46,20 @@
                   <label class="text-sm font-medium text-gray-700">Email</label>
                   <input v-model="form.email" type="email" class="input-field" />
                 </div>
-
+                <!--feature futura
                 <div class="space-y-1 md:col-span-2">
                   <label class="text-sm font-medium text-gray-700">Biografia</label>
                   <textarea v-model="form.bio" rows="3" class="input-field resize-none"></textarea>
                   <p class="text-xs text-gray-400 text-right">Breve descrição sobre você.</p>
                 </div>
+                -->
+
               </div>
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            
+             <!--feature futura
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Aparência</h2>
               <div class="space-y-4">
@@ -89,14 +91,17 @@
                 </div>
               </div>
             </div>
+            -->
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Notificações</h2>
               <div class="space-y-3">
+                <!--feature futura
                 <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors">
                   <input v-model="form.notifications.email" type="checkbox" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
                   <span class="text-gray-600">Receber emails semanais</span>
                 </label>
+                -->
                 <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors">
                   <input v-model="form.notifications.tasks" type="checkbox" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
                   <span class="text-gray-600">Alertas de tarefas atrasadas</span>

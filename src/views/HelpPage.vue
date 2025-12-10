@@ -54,7 +54,7 @@
                       :class="{'rotate-180': item.open}"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
                     </span>
                   </button>
@@ -69,6 +69,7 @@
               </div>
             </div>
 
+            <!--feature futura
             <div class="space-y-6">
               <h2 class="text-xl font-bold text-gray-800 mb-4">Ainda precisa de ajuda?</h2>
               
@@ -81,39 +82,38 @@
                   Iniciar Chat
                 </button>
               </div>
-
-              <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-                <h3 class="font-bold text-gray-800 mb-4">Envie uma mensagem</h3>
-                <form @submit.prevent="sendMessage" class="space-y-4">
-                  <div>
-                    <label class="text-xs font-semibold text-gray-500 uppercase">Assunto</label>
-                    <select class="w-full mt-1 p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:border-indigo-500">
-                      <option>Problema Técnico</option>
-                      <option>Sugestão</option>
-                      <option>Cobrança</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="text-xs font-semibold text-gray-500 uppercase">Mensagem</label>
-                    <textarea 
-                      v-model="contactMsg"
-                      rows="4" 
-                      class="w-full mt-1 p-3 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:border-indigo-500 resize-none"
-                      placeholder="Descreva seu problema..."
-                    ></textarea>
-                  </div>
-                  <button 
-                    type="submit"
-                    class="w-full bg-gray-800 text-white font-medium py-2 rounded-lg hover:bg-gray-900 transition-colors"
-                  >
-                    Enviar Email
-                  </button>
-                </form>
-              </div>
-
             </div>
-          </div>
+            -->
 
+            <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <h3 class="font-bold text-gray-800 mb-4">Envie uma mensagem</h3>
+              <form @submit.prevent="sendMessage" class="space-y-4">
+                <div>
+                  <label class="text-xs font-semibold text-gray-500 uppercase">Assunto</label>
+                  <select class="w-full mt-1 p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:border-indigo-500">
+                    <option>Problema Técnico</option>
+                    <option>Sugestão</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-gray-500 uppercase">Mensagem</label>
+                  <textarea 
+                    v-model="contactMsg"
+                    rows="4" 
+                    class="w-full mt-1 p-3 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:border-indigo-500 resize-none"
+                    placeholder="Descreva seu problema..."
+                  ></textarea>
+                </div>
+                <button 
+                  type="submit"
+                  class="w-full bg-gray-800 text-white font-medium py-2 rounded-lg hover:bg-gray-900 transition-colors"
+                >
+                  Enviar Email
+                </button>
+              </form>
+            </div>
+
+          </div>
         </div>
       </main>
     </div>
@@ -125,10 +125,8 @@ import { ref } from 'vue';
 import Sidebar from "../components/layout/Sidebar.vue";
 import TheHeader from "../components/layout/TheHeader.vue";
 
-// Estado da mensagem do formulário
 const contactMsg = ref('');
 
-// Dados do FAQ
 const faqs = ref([
   {
     question: 'Como funciona o método Pomodoro?',
@@ -152,12 +150,10 @@ const faqs = ref([
   }
 ]);
 
-// Função para abrir/fechar FAQ
 const toggleFaq = (index) => {
   faqs.value[index].open = !faqs.value[index].open;
 };
 
-// Função Mock de envio
 const sendMessage = () => {
   if (!contactMsg.value) return alert('Por favor escreva uma mensagem.');
   alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
@@ -166,7 +162,6 @@ const sendMessage = () => {
 </script>
 
 <style scoped>
-/* Transições suaves */
 main {
   transition: all 0.3s ease;
 }
