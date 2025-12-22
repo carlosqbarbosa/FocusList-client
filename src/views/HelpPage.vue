@@ -92,7 +92,7 @@
                   <label class="text-xs font-semibold text-gray-500 uppercase">Assunto</label>
                   <select class="w-full mt-1 p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 outline-none focus:border-indigo-500">
                     <option>Problema Técnico</option>
-                    <option>Sugestão</option>
+                    <option>Sugestão</option>``
                   </select>
                 </div>
                 <div>
