@@ -1,7 +1,7 @@
 <template>
   <header class="w-full bg-white shadow-sm px-6 py-4">
     <div class="lg:col-span-1">
-      <div class="flex items-center gap-3 mb-4">
+      <div class="flex items-center gap-3 mb-4">``
         <!-- Logo Minimalista -->
         <div class="logo-wrapper relative">
           <div class="logo-container bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-2.5 transition-transform duration-200 hover:scale-105">

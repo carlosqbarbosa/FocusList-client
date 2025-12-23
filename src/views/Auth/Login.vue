@@ -3,21 +3,11 @@
     <!-- Lado Esquerdo (Formulário estilizado) -->
     <div class="w-full md:w-1/2 flex items-center justify-center bg-white min-h-screen">
       <div class="w-full max-w-sm p-6">
-        <!-- Logo vertical -->
-        <div class="flex flex-col items-center mb-8">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               class="h-10 w-10 text-blue-600 mb-2"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7" />
-          </svg>
-          <h1 class="text-3xl font-bold text-blue-700">FocusList</h1>
-        </div>
+        <!-- Nova Logo com Timer -->
+        <LogoFocusList class="justify-center"/>
 
         <!-- Título -->
-        <h2 class="text-xl font-semibold text-blue-700 mb-6 text-center">Login</h2>
+        <h2 class="text-xl font-semibold text-blue-700 mt-8 mb-6 text-center">Login</h2>
 
         <h3 class="font-normal text-gray-500 mb-4 text-center">Seja Bem-vindo!</h3>
 
@@ -27,7 +17,6 @@
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div class="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
-              <!-- Novo ícone de email -->
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M16 4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM8 6l4 4 4-4" />
@@ -72,7 +61,7 @@
           <!-- Botão -->
           <button
             type="submit"
-            class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800 transition"
+            class="w-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white py-2 rounded hover:bg-blue-900 transition"
           >
             Entrar
           </button>
@@ -94,6 +83,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import LogoFocusList from '@/components/LogoFocusList.vue'
 import imgLogin from '@/assets/img/img-login.png'
 
 const email = ref('')
