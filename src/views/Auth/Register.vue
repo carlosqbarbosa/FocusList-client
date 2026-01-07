@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex">
-    <!-- Lado Esquerdo - Imagem -->
+
     <div class="hidden md:block md:w-1/2 h-screen overflow-hidden bg-gradient-to-br from-purple-500 to-indigo-600">
       <img
         :src="imgRegister"
@@ -9,26 +9,28 @@
       />
     </div>
 
-    <!-- Lado Direito - Formulário -->
+    
     <div class="w-full md:w-1/2 flex items-center justify-center bg-white min-h-screen px-4">
       <div class="w-full max-w-md p-8">
-        <!-- Logo centralizada -->
+        
         <div class="flex justify-center mb-8">
           <LogoFocusList />
         </div>
 
-        <!-- Título -->
+        
         <div class="text-center mb-8">
           <h2 class="text-2xl font-bold text-gray-800 mb-2">Crie sua conta</h2>
           <p class="text-gray-500 text-sm">Comece a organizar suas tarefas agora</p>
         </div>
 
-        <!-- Formulário -->
+        <div v-if="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-sm text-red-600">{{ errorMessage }}</p>
+        </div>
+
         <form @submit.prevent="handleRegister" class="space-y-5">
-          <!-- Campo Nome Completo -->
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              Nome Completo
+            <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">
+              Nome
             </label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -37,19 +39,43 @@
                 </svg>
               </div>
               <input
-                id="name"
-                v-model="nomeCompleto"
+                id="nome"
+                v-model="nome"
                 type="text"
                 required
-                placeholder="João Silva"
+                placeholder="João"
                 class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
-                :class="{ 'border-red-500': nameError }"
+                :class="{ 'border-red-500': nomeError }"
+                :disabled="isLoading"
               />
             </div>
-            <p v-if="nameError" class="mt-1 text-xs text-red-500">{{ nameError }}</p>
+            <p v-if="nomeError" class="mt-1 text-xs text-red-500">{{ nomeError }}</p>
           </div>
 
-          <!-- Campo Email -->
+          <div>
+            <label for="sobrenome" class="block text-sm font-medium text-gray-700 mb-2">
+              Sobrenome
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+              </div>
+              <input
+                id="sobrenome"
+                v-model="sobrenome"
+                type="text"
+                required
+                placeholder="Silva"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                :class="{ 'border-red-500': sobrenomeError }"
+                :disabled="isLoading"
+              />
+            </div>
+            <p v-if="sobrenomeError" class="mt-1 text-xs text-red-500">{{ sobrenomeError }}</p>
+          </div>
+
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
               Email
@@ -68,12 +94,12 @@
                 placeholder="seu@email.com"
                 class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
                 :class="{ 'border-red-500': emailError }"
+                :disabled="isLoading"
               />
             </div>
             <p v-if="emailError" class="mt-1 text-xs text-red-500">{{ emailError }}</p>
           </div>
 
-          <!-- Campo Senha -->
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
               Senha
@@ -93,11 +119,13 @@
                 class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
                 :class="{ 'border-red-500': passwordError }"
                 @input="checkPasswordStrength"
+                :disabled="isLoading"
               />
               <button
                 type="button"
                 @click="showPassword = !showPassword"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                :disabled="isLoading"
               >
                 <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -108,7 +136,6 @@
                 </svg>
               </button>
             </div>
-            <!-- Indicador de força da senha -->
             <div v-if="password" class="mt-2">
               <div class="flex gap-1 mb-1">
                 <div class="h-1 flex-1 rounded" :class="passwordStrength >= 1 ? 'bg-red-500' : 'bg-gray-200'"></div>
@@ -126,26 +153,8 @@
             <p v-if="passwordError" class="mt-1 text-xs text-red-500">{{ passwordError }}</p>
           </div>
 
-          <!-- Termos de uso -->
-          <div class="flex items-start">
-            <input 
-              id="terms" 
-              v-model="acceptTerms" 
-              type="checkbox" 
-              class="w-4 h-4 mt-0.5 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-            >
-            <label for="terms" class="ml-2 text-sm text-gray-600">
-              Eu aceito os 
-              <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">Termos de Uso</a> 
-              e a 
-              <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">Política de Privacidade</a>
-            </label>
-          </div>
-
-          <!-- Botão de Cadastro -->
           <button
             type="submit"
-            :disabled="isLoading || !acceptTerms"
             class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
           >
             <span v-if="!isLoading">Criar conta</span>
@@ -158,7 +167,6 @@
             </span>
           </button>
 
-          <!-- Link para login -->
           <p class="text-center text-sm text-gray-600 mt-6">
             Já possui uma conta? 
             <router-link to="/login" class="text-purple-600 hover:text-purple-700 font-semibold">
@@ -174,20 +182,26 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth.store'
 import LogoFocusList from '@/components/LogoFocusList.vue'
 import imgRegister from '@/assets/img/img-cadastro.png'
 
-const nomeCompleto = ref('')
+const router = useRouter()
+const authStore = useAuthStore()
+
+const nome = ref('')
+const sobrenome = ref('')
 const email = ref('')
 const password = ref('')
-const acceptTerms = ref(false)
 const showPassword = ref(false)
 const isLoading = ref(false)
-const nameError = ref('')
+
+const nomeError = ref('')
+const sobrenomeError = ref('')
 const emailError = ref('')
 const passwordError = ref('')
+const errorMessage = ref('')
 const passwordStrength = ref(0)
-const router = useRouter()
 
 const passwordStrengthText = computed(() => {
   switch (passwordStrength.value) {
@@ -206,23 +220,29 @@ const validateEmail = (email) => {
 const checkPasswordStrength = () => {
   const pwd = password.value
   let strength = 0
-  
+
   if (pwd.length >= 6) strength++
   if (pwd.length >= 10) strength++
   if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd) && /[0-9]/.test(pwd)) strength++
-  
+
   passwordStrength.value = strength
 }
 
 const handleRegister = async () => {
-  // Reset errors
-  nameError.value = ''
+
+  nomeError.value = ''
+  sobrenomeError.value = ''
   emailError.value = ''
   passwordError.value = ''
+  errorMessage.value = ''
 
-  // Validações
-  if (nomeCompleto.value.trim().split(' ').length < 2) {
-    nameError.value = 'Por favor, insira seu nome completo'
+  if (nome.value.trim().length < 2) {
+    nomeError.value = 'Nome deve ter pelo menos 2 caracteres'
+    return
+  }
+
+  if (sobrenome.value.trim().length < 2) {
+    sobrenomeError.value = 'Sobrenome deve ter pelo menos 2 caracteres'
     return
   }
 
@@ -236,20 +256,29 @@ const handleRegister = async () => {
     return
   }
 
-  if (!acceptTerms.value) {
-    return
-  }
-
   isLoading.value = true
 
-  // Simular delay de API
-  setTimeout(() => {
-    localStorage.setItem('user', JSON.stringify({
-      name: nomeCompleto.value,
-      email: email.value
-    }))
+  try {
+    await authStore.register({
+      nome: nome.value.trim(),
+      sobrenome: sobrenome.value.trim(),
+      email: email.value,
+      senha: password.value
+    })
+
     router.push('/dashboard')
+
+  } catch (error) {
+    if (error.response?.status === 409) {
+      errorMessage.value = 'Este email já está cadastrado. Tente outro.'
+      emailError.value = 'Email já cadastrado'
+    } else {
+      errorMessage.value = 'Erro ao realizar cadastro. Tente novamente.'
+    }
+
+    console.error('Erro no cadastro:', error)
+  } finally {
     isLoading.value = false
-  }, 800)
+  }
 }
 </script>

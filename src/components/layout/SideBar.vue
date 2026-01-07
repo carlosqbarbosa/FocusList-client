@@ -5,11 +5,11 @@
     <div>
       <div class="flex items-center gap-2 mb-8">
         <img
-          :src="avatar"
+          :src="userAvatar"
           alt="User"
           class="rounded-full w-10 h-10 object-cover"
         />
-        <span class="font-medium">Camila Silva</span>
+        <span class="font-medium">{{ userName }}</span>
       </div>
 
       <nav class="space-y-2">
@@ -67,9 +67,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import avatar from "@/assets/img/avatar.jpg";
+import { useAuthStore } from "@/store/auth.store";
 import ModalLogout from "@/components/Modal/ModalLogout.vue";
 import {
   LayoutDashboard,
@@ -82,7 +82,19 @@ import {
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 const showModal = ref(false);
+
+const userName = computed(() => {
+  if (authStore.usuario) {
+    return authStore.usuario.nomeCompleto || `${authStore.usuario.nome} ${authStore.usuario.sobrenome}`
+  }
+  return 'Usuário'
+})
+
+const userAvatar = computed(() => {
+  return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'
+})
 
 function linkClass(path) {
   return route.path === path
@@ -92,7 +104,8 @@ function linkClass(path) {
 
 function logout() {
   showModal.value = false;
-  router.push("/login"); 
+  authStore.logout();
+  router.replace("/login");
 }
 </script>
 

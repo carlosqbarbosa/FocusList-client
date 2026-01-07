@@ -6,10 +6,7 @@
       <TheHeader />
 
       <main class="flex-1 p-8 overflow-y-auto">
-      <!--  <h1 class="text-3xl font-bold text-gray-800 mb-8">
-          Olá, <span class="text-indigo-600">Camila 👋</span>
-        </h1>-->
-
+    
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 animate-fade-in">
           
           <div class="card">
@@ -43,7 +40,7 @@
 </template>
 
 <script setup>
-// Imports de Layout
+
 import Sidebar from "../components/layout/SideBar.vue";
 import TheHeader from "../components/layout/TheHeader.vue";
 

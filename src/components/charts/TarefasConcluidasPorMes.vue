@@ -16,7 +16,6 @@ import {
   LinearScale
 } from 'chart.js'
 
-// Registrar os componentes do Chart.js
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const chartData = {
