@@ -5,21 +5,21 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -31,31 +31,27 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       const refreshToken = localStorage.getItem('refreshToken');
-      
-      if (refreshToken) {
-        try {
-          const { data } = await axios.post(`${API_URL}/auth/refresh-token`, {
-            refreshToken
-          });
 
-          localStorage.setItem('token', data.data.token);
-          localStorage.setItem('refreshToken', data.data.refreshToken);
+      if (!refreshToken) {
+        limparSessao();
+        return Promise.reject(error);
+      }
 
-          originalRequest.headers.Authorization = `Bearer ${data.data.token}`;
-          return api(originalRequest);
-        } catch (refreshError) {
-          // Se refresh falhou, redireciona para login
-          localStorage.removeItem('token');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('user');
-          window.location.href = '/login';
-          return Promise.reject(refreshError);
-        }
-      } else {
-        // Sem refresh token, redireciona para login
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
+      try {
+        const response = await axios.post(`${API_URL}/auth/refresh-token`, {
+          refreshToken,
+        });
+
+        const { token, refreshToken: newRefreshToken } = response.data.data;
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', newRefreshToken);
+
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        limparSessao();
+        return Promise.reject(refreshError);
       }
     }
 
@@ -63,14 +59,21 @@ api.interceptors.response.use(
   }
 );
 
+function limparSessao() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('usuario');
+}
+
 export const auth = {
   register: async (userData) => {
     const response = await api.post('/auth/register', {
       nome: userData.nome,
       sobrenome: userData.sobrenome,
       email: userData.email,
-      senha: userData.senha
+      senha: userData.senha,
     });
+
     return response.data;
   },
 
@@ -78,20 +81,24 @@ export const auth = {
     const response = await api.post('/auth/login', {
       email: credentials.email,
       senha: credentials.senha,
-      lembrarMe: credentials.lembrarMe || false
+      lembrarMe: credentials.lembrarMe || false,
     });
+
     return response.data;
   },
 
   logout: async () => {
-    const response = await api.post('/auth/logout');
-    return response.data;
+    try {
+      await api.post('/auth/logout');
+    } finally {
+      limparSessao();
+    }
   },
 
   verificarToken: async () => {
     const response = await api.get('/auth/verificar-token');
     return response.data;
-  }
+  },
 };
 
 export const user = {
@@ -108,7 +115,7 @@ export const user = {
   alterarSenha: async (senhas) => {
     const response = await api.put('/users/alterar-senha', senhas);
     return response.data;
-  }
+  },
 };
 
 export const getDashboardData = async () => {

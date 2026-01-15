@@ -15,60 +15,33 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login({ email, senha, lembrarMe }) {
-      console.log('🔍 ====== DEBUG LOGIN FRONTEND ======')
-      console.log(' Iniciando login...')
-      console.log(' Email:', email)
-      console.log(' Senha:', senha)
-      console.log(' Lembrar-me:', lembrarMe)
-      
-      this.carregando = true
+    this.carregando = true
 
-      try {
-        console.log(' Fazendo request para /auth/login...')
-        
-        const { data } = await api.post('/auth/login', {
-          email,
-          senha,
-        })
+    try {
+      const { data } = await api.post('/auth/login', {
+        email,
+        senha,
+        lembrarMe,
+      })
 
-        console.log(' Resposta recebida:', data)
-        console.log(' data.usuario:', data.usuario)
-        console.log(' data.token:', data.token)
+      this.usuario = data.usuario
+      this.token = data.token
+      this.autenticado = true
 
-        this.usuario = data.usuario
-        this.token = data.token
-        this.autenticado = true
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('usuario', JSON.stringify(data.usuario))
 
-        console.log(' State atualizado:')
-        console.log('   - usuario:', this.usuario)
-        console.log('   - token:', this.token)
-        console.log('   - autenticado:', this.autenticado)
-
-        if (lembrarMe) {
-          console.log(' Salvando no localStorage...')
-          localStorage.setItem('token', this.token)
-          localStorage.setItem('usuario', JSON.stringify(this.usuario))
-          console.log(' Salvo no localStorage')
-        }
-
-        console.log(' Login concluído com sucesso!')
-        console.log(' ====== FIM DEBUG FRONTEND ======')
-        return true
-        
-      } catch (error) {
-        console.error(' ====== ERRO NO LOGIN FRONTEND ======')
-        console.error('Erro completo:', error)
-        console.error('Resposta do erro:', error.response?.data)
-        console.error('Status do erro:', error.response?.status)
-        console.error('Headers do erro:', error.response?.headers)
-        console.error(' ====== FIM ERRO ======')
-        return false
-        
-      } finally {
-        this.carregando = false
-        console.log('Carregando finalizado')
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken)
       }
-    },
+
+      return true
+    } catch (error) {
+      return false
+    } finally {
+      this.carregando = false
+    }
+  },
 
     async register(dados) {
       this.carregando = true
@@ -99,21 +72,16 @@ export const useAuthStore = defineStore('auth', {
 
     carregarDoStorage() {
       const token = localStorage.getItem('token')
-      const usuarioString = localStorage.getItem('usuario')
+      const usuario = localStorage.getItem('usuario')
 
-      if (!token || !usuarioString || usuarioString === 'undefined') {
-        return
-      }
-
-      try {
-        this.usuario = JSON.parse(usuarioString)
-        this.token = token
-        this.autenticado = true
-      } catch (error) {
-        console.error('Erro ao carregar storage:', error)
-        this.usuario = null
-        this.token = null
-        this.autenticado = false
+      if (token && usuario) {
+        try {
+          this.token = token
+          this.usuario = JSON.parse(usuario)
+          this.autenticado = true
+        } catch {
+          this.logout()
+        }
       }
     },
 

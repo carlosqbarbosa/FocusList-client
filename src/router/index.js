@@ -11,7 +11,7 @@ import SettingsPage from '../views/SettingsPage.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/dashboard',
+    redirect: '/pomodoro',
   },
   {
     path: '/login',
@@ -62,23 +62,28 @@ const router = createRouter({
   routes,
 })
 
+let authInicializado = false
+
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  
-  if (!authStore.isAuthenticated) {
+
+  if (!authInicializado) {
     authStore.carregarDoStorage()
+    authInicializado = true
   }
 
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
-  
+  const requiresAuth = to.matched.some(r => r.meta.requiresAuth)
+  const requiresGuest = to.matched.some(r => r.meta.requiresGuest)
+
   if (requiresAuth && !authStore.isAuthenticated) {
-    next('/login')
-  } else if (requiresGuest && authStore.isAuthenticated) {
-    next('/dashboard')
-  } else {
-    next()
+    return next('/login')
   }
+
+  if (requiresGuest && authStore.isAuthenticated) {
+    return next('/pomodoro')
+  }
+
+  next()
 })
 
 export default router

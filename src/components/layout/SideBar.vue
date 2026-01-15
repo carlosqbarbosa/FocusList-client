@@ -12,14 +12,6 @@
         <span class="font-medium">{{ userName }}</span>
       </div>
 
-      <nav class="space-y-2">
-        <router-link to="/dashboard" :class="linkClass('/dashboard')">
-          <div class="flex items-center gap-2">
-            <LayoutDashboard class="w-5 h-5" />
-            <span>Dashboard</span>
-          </div>
-        </router-link>
-
         <router-link to="/pomodoro" :class="linkClass('/pomodoro')">
           <div class="flex items-center gap-2">
             <Timer class="w-5 h-5" />
@@ -31,6 +23,14 @@
           <div class="flex items-center gap-2">
             <CheckSquare class="w-5 h-5" />
             <span>Minhas Tasks</span>
+          </div>
+        </router-link>
+
+        <nav class="space-y-2">
+        <router-link to="/dashboard" :class="linkClass('/dashboard')">
+          <div class="flex items-center gap-2">
+            <LayoutDashboard class="w-5 h-5" />
+            <span>Dashboard</span>
           </div>
         </router-link>
 

@@ -183,7 +183,7 @@ const handleLogin = async () => {
       lembrarMe: lembrarMe.value,
     })
 
-    router.replace('/dashboard')
+    router.replace('/pomodoro')
   } catch (error) {
     mensagemErro.value = 'E-mail ou senha inválidos'
     console.error(error)
