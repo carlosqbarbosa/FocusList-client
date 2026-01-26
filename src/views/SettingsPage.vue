@@ -10,13 +10,30 @@
           
           <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Configurações</h1>
-            <button 
-              @click="saveSettings"
-              class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all shadow-sm flex items-center gap-2"
-            >
-              <span v-if="saving">Salvando...</span>
-              <span v-else>Salvar Alterações</span>
-            </button>
+            <div class="flex gap-3">
+              <button 
+                v-if="!editMode"
+                @click="enableEditMode"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all shadow-sm flex items-center gap-2"
+              >
+                Editar
+              </button>
+              <template v-else>
+                <button 
+                  @click="cancelEdit"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-all shadow-sm"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  @click="saveSettings"
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all shadow-sm flex items-center gap-2"
+                >
+                  <span v-if="saving">Salvando...</span>
+                  <span v-else>Salvar Alterações</span>
+                </button>
+              </template>
+            </div>
           </div>
 
           <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
@@ -24,13 +41,16 @@
             
             <div class="flex flex-col md:flex-row gap-8 items-start">
               <div class="flex flex-col items-center gap-3">
-                <div class="relative group cursor-pointer">
+                <div class="relative group" :class="editMode ? 'cursor-pointer' : 'cursor-default'">
                   <img 
                     :src="userAvatar"
                     alt="Avatar" 
                     class="w-24 h-24 rounded-full bg-gray-100 border-4 border-white shadow-md"
                   >
-                  <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div 
+                    v-if="editMode"
+                    class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
                     <span class="text-white text-xs font-medium">Alterar</span>
                   </div>
                 </div>
@@ -39,17 +59,32 @@
               <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 <div class="space-y-1">
                   <label class="text-sm font-medium text-gray-700">Nome</label>
-                  <input v-model="form.nome" type="text" class="input-field" />
+                  <input 
+                    v-model="form.nome" 
+                    type="text" 
+                    class="input-field" 
+                    :disabled="!editMode" 
+                  />
                 </div>
                 
                 <div class="space-y-1">
                   <label class="text-sm font-medium text-gray-700">Sobrenome</label>
-                  <input v-model="form.sobrenome" type="text" class="input-field" />
+                  <input 
+                    v-model="form.sobrenome" 
+                    type="text" 
+                    class="input-field" 
+                    :disabled="!editMode" 
+                  />
                 </div>
 
                 <div class="space-y-1 md:col-span-2">
                   <label class="text-sm font-medium text-gray-700">Email</label>
-                  <input v-model="form.email" type="email" class="input-field" disabled />
+                  <input 
+                    v-model="form.email" 
+                    type="email" 
+                    class="input-field" 
+                    disabled 
+                  />
                   <p class="text-xs text-gray-400">Email não pode ser alterado</p>
                 </div>
               </div>
@@ -60,12 +95,28 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Notificações</h2>
               <div class="space-y-3">
-                <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                  <input v-model="form.notifications.tasks" type="checkbox" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
+                <label 
+                  class="flex items-center gap-3 p-2 rounded-lg transition-colors"
+                  :class="editMode ? 'cursor-pointer hover:bg-gray-50' : 'cursor-default'"
+                >
+                  <input 
+                    v-model="form.notifications.tasks" 
+                    type="checkbox" 
+                    class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                    :disabled="!editMode"
+                  >
                   <span class="text-gray-600">Alertas de tarefas atrasadas</span>
                 </label>
-                <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                  <input v-model="form.notifications.pomodoro" type="checkbox" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
+                <label 
+                  class="flex items-center gap-3 p-2 rounded-lg transition-colors"
+                  :class="editMode ? 'cursor-pointer hover:bg-gray-50' : 'cursor-default'"
+                >
+                  <input 
+                    v-model="form.notifications.pomodoro" 
+                    type="checkbox" 
+                    class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                    :disabled="!editMode"
+                  >
                   <span class="text-gray-600">Sons do Pomodoro</span>
                 </label>
               </div>
@@ -96,6 +147,7 @@ import TheHeader from "../components/layout/TheHeader.vue";
 
 const authStore = useAuthStore();
 const saving = ref(false);
+const editMode = ref(false);
 
 const form = reactive({
   nome: '',
@@ -107,33 +159,77 @@ const form = reactive({
   }
 });
 
+const originalData = ref({});
+
 const userAvatar = computed(() => {
   return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + authStore.usuario?.email
 })
 
 onMounted(() => {
+  loadUserData();
+})
+
+const loadUserData = () => {
+  console.log('=== CARREGANDO DADOS DO USUÁRIO ===')
+  console.log('authStore.usuario:', authStore.usuario)
+  
   if (authStore.usuario) {
     form.nome = authStore.usuario.nome || ''
     form.sobrenome = authStore.usuario.sobrenome || ''
     form.email = authStore.usuario.email || ''
+    
+    if (authStore.usuario.preferences?.notifications) {
+      form.notifications = { ...authStore.usuario.preferences.notifications }
+    }
+    
+    console.log('Dados carregados no form:', {
+      nome: form.nome,
+      sobrenome: form.sobrenome,
+      email: form.email,
+      notifications: form.notifications
+    })
+    
+    originalData.value = {
+      nome: form.nome,
+      sobrenome: form.sobrenome,
+      notifications: { ...form.notifications }
+    }
   }
-})
+}
 
+const enableEditMode = () => {
+  editMode.value = true;
+}
+
+const cancelEdit = () => {
+  form.nome = originalData.value.nome;
+  form.sobrenome = originalData.value.sobrenome;
+  form.notifications = { ...originalData.value.notifications };
+  editMode.value = false;
+}
 
 const saveSettings = () => {
   saving.value = true;
   
   setTimeout(() => {
-   
-    if (authStore.usuario) {
-      authStore.usuario.nome = form.nome
-      authStore.usuario.sobrenome = form.sobrenome
-      authStore.usuario.nomeCompleto = `${form.nome} ${form.sobrenome}`
-      
-      localStorage.setItem('usuario', JSON.stringify(authStore.usuario))
+
+    authStore.updateUser({
+      nome: form.nome,
+      sobrenome: form.sobrenome
+    })
+    
+    authStore.updatePreferences({
+      notifications: form.notifications
+    })
+    
+    originalData.value = {
+      nome: form.nome,
+      sobrenome: form.sobrenome,
+      notifications: { ...form.notifications }
     }
     
     saving.value = false;
+    editMode.value = false;
     alert('Configurações salvas com sucesso! ✨');
   }, 1000);
 };
