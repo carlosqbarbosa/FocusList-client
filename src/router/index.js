@@ -11,7 +11,7 @@ import SettingsPage from '../views/SettingsPage.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/pomodoro',
+    redirect: '/login',
   },
   {
     path: '/login',
