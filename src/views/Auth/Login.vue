@@ -90,7 +90,6 @@
                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                 :disabled="carregando"
               >
-                <!-- seus SVGs mantidos -->
                 <svg v-if="!mostrarSenha" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -166,6 +165,7 @@ const handleLogin = async () => {
   erroEmail.value = ''
   erroSenha.value = ''
   mensagemErro.value = ''
+  erroCredenciais.value = false
 
   if (!email.value) {
     erroEmail.value = 'Informe o e-mail'
@@ -177,22 +177,23 @@ const handleLogin = async () => {
     return
   }
 
-  carregando.value = true
+  try {
+    carregando.value = true
 
-  const sucesso = await authStore.login({
-    email: email.value,
-    senha: senha.value,
-    lembrarMe: lembrarMe.value,
-  })
+    await authStore.login({
+      email: email.value,
+      senha: senha.value,
+      lembrarMe: lembrarMe.value,
+    })
 
-  carregando.value = false
+    router.replace('/pomodoro')
 
-  if (!sucesso) {
+  } catch {
     mensagemErro.value = 'E-mail ou senha inválidos'
-    return
+    erroCredenciais.value = true
+  } finally {
+    carregando.value = false
   }
-
-  router.replace('/pomodoro')
 }
 
 watch([email, senha], () => {

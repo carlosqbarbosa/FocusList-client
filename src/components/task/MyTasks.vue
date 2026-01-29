@@ -22,10 +22,7 @@
             <td class="py-3 px-6 border-b">{{ task.nome }}</td>
 
             <td class="py-3 px-6 border-b">
-              <select
-                v-model="task.status"
-                class="border border-gray-300 rounded px-3 py-1 w-40 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700"
-              >
+              <select v-model="task.status" class="border border-gray-300 rounded px-3 py-1 w-40">
                 <option value="Completo">Completo</option>
                 <option value="Em progresso">Em progresso</option>
                 <option value="Não iniciado">Não iniciado</option>
@@ -33,10 +30,7 @@
             </td>
 
             <td class="py-3 px-6 border-b">
-              <select
-                v-model="task.prioridade"
-                class="border border-gray-300 rounded px-3 py-1 w-40 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700"
-              >
+              <select v-model="task.prioridade" class="border border-gray-300 rounded px-3 py-1 w-40">
                 <option value="Alta">Alta</option>
                 <option value="Moderada">Moderada</option>
                 <option value="Baixa">Baixa</option>
@@ -45,10 +39,8 @@
 
             <td class="py-3 px-6 border-b text-center">
               <div class="flex justify-center gap-3">
-                <button
-                @click="openDetailsModal(task)"
-                  class="bg-blue-900 text-white px-3 py-1 rounded hover:bg-blue-800 transition"
-                >
+
+                <button @click="openDetailsModal(task)" class="bg-blue-900 text-white px-3 py-1 rounded">
                   Ver detalhes
                 </button>
 
@@ -58,12 +50,10 @@
                   @close="showDetailsModal = false"
                 />
 
-                <button
-                  @click="openEditModal(task)"
-                  class="bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-900 transition"
-                >
+                <button @click="openEditModal(task)" class="bg-blue-800 text-white px-3 py-1 rounded">
                   Editar
                 </button>
+
                 <modalEditTask
                   :show="showEditModal"
                   :task="selectedTask"
@@ -71,10 +61,7 @@
                   @save="saveEditedTask"
                 />
 
-                <button
-                  @click="openDeleteModal(task)"
-                  class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
-                >
+                <button @click="openDeleteModal(task)" class="bg-red-600 text-white px-3 py-1 rounded">
                   Deletar
                 </button>
 
@@ -83,7 +70,7 @@
                   @deleteTask="deleteTask"
                   @cancelDelete="cancelDelete"
                 />
-                
+
               </div>
             </td>
           </tr>
@@ -92,10 +79,7 @@
     </div>
 
     <div class="text-right mt-4">
-      <button 
-        @click="showModal = true"
-        class="text-red-500 hover:text-red-600 text-sm font-medium"
-      >
+      <button @click="showModal = true" class="text-red-500 text-sm font-medium">
         + Adicionar Task
       </button>
 
@@ -109,85 +93,125 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { ref, onMounted } from "vue";
 import modalAddTasks from "@/components/Modal/modalAddTasks.vue";
 import modalDeleteTask from "@/components/Modal/modalDeleteTask.vue";
 import modalTaskDetails from "@/components/Modal/modalTaskDetails.vue";
 import modalEditTask from "@/components/Modal/modalEditTask.vue";
+import api from "@/services/api";
 
 
 const showModal = ref(false);
-const showDeleteModal = ref(false);     
-const taskToDelete = ref(null); 
+const showDeleteModal = ref(false);
 const showDetailsModal = ref(false);
-const selectedTask = ref({});
 const showEditModal = ref(false);
-      
+
+const taskToDelete = ref(null);
+const selectedTask = ref({});
+
+const tasks = ref([])
 
 
-const tasks = reactive([
-  { id: 1, nome: "Estudar React", status: "Completo", prioridade: "Alta" },
-  { id: 2, nome: "Fazer projeto", status: "Em progresso", prioridade: "Moderada" },
-  { id: 3, nome: "Estudar Node", status: "Não iniciado", prioridade: "Baixa" },
-]);
+function mapStatus(s) {
+  if (s === 'nao_iniciado') return 'Não iniciado'
+  if (s === 'em_progresso') return 'Em progresso'
+  if (s === 'concluido') return 'Completo'
+  return s
+}
 
-function openDeleteModal(task) {
-  taskToDelete.value = task;
-  showDeleteModal.value = true;
+function unmapStatus(s) {
+  if (s === 'Não iniciado') return 'nao_iniciado'
+  if (s === 'Em progresso') return 'em_progresso'
+  if (s === 'Completo') return 'concluido'
+  return s
+}
+
+function mapPrioridade(p) {
+  if (p === 'alta') return 'Alta'
+  if (p === 'moderada') return 'Moderada'
+  if (p === 'baixa') return 'Baixa'
+  return p
+}
+
+function unmapPrioridade(p) {
+  if (p === 'Alta') return 'alta'
+  if (p === 'Moderada') return 'moderada'
+  if (p === 'Baixa') return 'baixa'
+  return p
 }
 
 
-function deleteTask() {
-  const id = taskToDelete.value.id;
-  const index = tasks.findIndex((task) => task.id === id);
-  if (index !== -1) tasks.splice(index, 1);
+async function loadTasks() {
+  const { data } = await api.get('/tasks')
 
-  showDeleteModal.value = false;
-  taskToDelete.value = null;
+  tasks.value = data.data.map(t => ({
+    id: t.id,
+    nome: t.titulo,
+    status: mapStatus(t.status),
+    prioridade: mapPrioridade(t.prioridade),
+    descricao: t.descricao,
+    data: t.data_vencimento
+  }))
+}
+
+onMounted(loadTasks)
+
+
+function openDeleteModal(task) {
+  taskToDelete.value = task
+  showDeleteModal.value = true
 }
 
 function cancelDelete() {
-  showDeleteModal.value = false;
-  taskToDelete.value = null;
+  showDeleteModal.value = false
+  taskToDelete.value = null
 }
 
-
-function addTask(novaTask) {
-  tasks.push({
-    id: Date.now(),
-    nome: novaTask.titulo,
-    status: "Não iniciado",
-    prioridade: "Moderada",
-    data: novaTask.data,
-    descricao: novaTask.descricao,
-  });
-
-  showModal.value = false;
+async function deleteTask() {
+  await api.delete(`/tasks/${taskToDelete.value.id}`)
+  tasks.value = tasks.value.filter(t => t.id !== taskToDelete.value.id)
+  cancelDelete()
 }
 
-const openDetailsModal = (task) => {
-  selectedTask.value = task;
-  showDetailsModal.value = true;
+function openDetailsModal(task) {
+  selectedTask.value = task
+  showDetailsModal.value = true
 }
 
 function openEditModal(task) {
-  selectedTask.value = task;
-  showEditModal.value = true;
+  selectedTask.value = task
+  showEditModal.value = true
 }
 
-function saveEditedTask(updatedTask) {
-  const id = selectedTask.value.id;
+async function saveEditedTask(updatedTask) {
+  await api.put(`/tasks/${selectedTask.value.id}`, {
+    titulo: updatedTask.nome,
+    descricao: updatedTask.descricao,
+    status: unmapStatus(updatedTask.status),
+    prioridade: unmapPrioridade(updatedTask.prioridade)
+  })
 
-  const index = tasks.findIndex((t) => t.id === id);
-  if (index !== -1) {
-    tasks[index] = { 
-      ...tasks[index], 
-      ...updatedTask 
-    };
+  await loadTasks()
+  showEditModal.value = false
+}
+
+
+async function addTask(novaTask) {
+  try {
+    const res = await api.post('/tasks', {
+      titulo: novaTask.titulo,
+      descricao: novaTask.descricao,
+      prioridade: 'moderada'
+    })
+
+    console.log("TASK CRIADA:", res.data)
+
+    showModal.value = false
+    await loadTasks()
+
+  } catch (e) {
+    console.error("ERRO AO CRIAR TASK:", e.response?.data || e)
   }
-
-  showEditModal.value = false;
 }
-
 </script>
 

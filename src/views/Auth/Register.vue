@@ -266,7 +266,7 @@ const handleRegister = async () => {
       senha: password.value
     })
 
-    router.push('/dashboard')
+    router.push('/pomodoro')
 
   } catch (error) {
     if (error.response?.status === 409) {
