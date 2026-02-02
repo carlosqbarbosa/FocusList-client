@@ -15,9 +15,21 @@
         </div>
 
         <div>
-          <label class="block font-medium mb-1">Data</label>
+          <label class="block font-medium mb-1">Status</label>
+          <select
+            v-model="edited.status"
+            class="w-full border rounded px-3 py-2"
+          >
+            <option>Não iniciado</option>
+            <option>Em progresso</option>
+            <option>Completo</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">Data de Vencimento</label>
           <input
-            v-model="edited.data"
+            v-model="edited.dataVencimento"
             class="w-full border rounded px-3 py-2"
             type="date"
           />
@@ -75,29 +87,37 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "close"]);
 
-
 const edited = reactive({
   nome: "",
-  data: "",
-  prioridade: "",
+  status: "Não iniciado",
+  dataVencimento: "",
+  prioridade: "Moderada",
   descricao: ""
 });
-
 
 watch(
   () => props.task,
   (t) => {
     if (t) {
-      edited.nome = t.nome;
-      edited.data = t.data || "";
-      edited.prioridade = t.prioridade;
+      edited.nome = t.nome || "";
+      edited.status = t.status || "Não iniciado";
+      edited.dataVencimento = t.dataVencimento || "";
+      edited.prioridade = t.prioridade || "Moderada";
       edited.descricao = t.descricao || "";
+      
     }
   },
   { immediate: true }
 );
 
 function save() {
-  emit("save", { ...edited });
+  
+  emit("save", { 
+    nome: edited.nome,
+    status: edited.status,
+    dataVencimento: edited.dataVencimento,
+    prioridade: edited.prioridade,
+    descricao: edited.descricao
+  });
 }
 </script>

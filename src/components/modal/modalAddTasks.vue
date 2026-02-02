@@ -23,11 +23,10 @@
         </label>
 
         <label class="text-left font-medium">
-          Data:
+          Data de Vencimento:
           <input
-            v-model="form.data"
+            v-model="form.dataVencimento"
             type="date"
-            required
             class="w-full border border-gray-300 rounded px-3 py-2"
           />
         </label>
@@ -37,7 +36,6 @@
           <input
             v-model="form.descricao"
             type="text"
-            required
             class="w-full border border-gray-300 rounded px-3 py-2"
           />
         </label>
@@ -63,7 +61,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive } from "vue";
+import { defineProps, defineEmits, reactive, watch } from "vue";
 
 const props = defineProps({
   show: {
@@ -76,20 +74,29 @@ const emit = defineEmits(["save", "cancel"]);
 
 const form = reactive({
   titulo: "",
-  data: "",
+  dataVencimento: "",
   descricao: "",
 });
 
+
 function handleSubmit() {
-  emit("save", { ...form });
+  
+  emit("save", { 
+    titulo: form.titulo,
+    dataVencimento: form.dataVencimento,
+    descricao: form.descricao
+  });
 
   form.titulo = "";
-  form.data = "";
+  form.dataVencimento = "";
   form.descricao = "";
 }
 
-
 function cancel() {
+  form.titulo = "";
+  form.dataVencimento = "";
+  form.descricao = "";
+  
   emit("cancel");
 }
 </script>
