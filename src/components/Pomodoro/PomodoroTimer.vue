@@ -17,7 +17,6 @@
           <Play class="w-8 h-8" />
         </button>
 
-
         <button
           @click="pauseTimer"
           :disabled="!isRunning"
@@ -29,7 +28,6 @@
         >
           <Pause class="w-8 h-8" />
         </button>
-
 
         <button
           @click="resetTimer"
@@ -49,19 +47,20 @@
       <button @click="setMode('pausa-curta')" :class="mode === 'pausa-curta' ? activeClass : inactiveClass">Pausa curta</button>
       <button @click="setMode('pausa-longa')" :class="mode === 'pausa-longa' ? activeClass : inactiveClass">Pausa longa</button>
     </div>
+
+    
+    <audio ref="alarmAudio" preload="auto">
+      <source src="https://freesound.org/data/previews/316/316847_4939433-lq.mp3" type="audio/mpeg">
+    </audio>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onBeforeUnmount } from "vue";
 import { Play, Pause, RotateCcw } from "lucide-vue-next";
-import { useSound } from "@vueuse/sound";
 
 
-const { play: playAlarm } = useSound(
-  "https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"
-);
-
+const alarmAudio = ref(null);
 
 const DURATIONS = {
   foco: 25 * 60,
@@ -82,6 +81,15 @@ const formatTime = computed(() => {
 });
 
 
+function playAlarm() {
+  if (alarmAudio.value) {
+    alarmAudio.value.currentTime = 0; 
+    alarmAudio.value.play().catch(err => {
+      console.warn('Erro ao tocar alarme:', err);
+    });
+  }
+}
+
 function startTimer() {
   if (isRunning.value) return;
   isRunning.value = true;
@@ -98,19 +106,16 @@ function startTimer() {
   }, 1000);
 }
 
-
 function pauseTimer() {
   if (timer) clearInterval(timer);
   timer = null;
   isRunning.value = false;
 }
 
-
 function resetTimer() {
   pauseTimer();
   time.value = DURATIONS[mode.value];
 }
-
 
 function setMode(newMode) {
   mode.value = newMode;
@@ -121,7 +126,6 @@ function setMode(newMode) {
 onBeforeUnmount(() => {
   if (timer) clearInterval(timer);
 });
-
 
 const activeClass = "px-4 py-2 rounded-lg bg-blue-900 text-white";
 const inactiveClass = "px-4 py-2 rounded-lg bg-gray-200 text-blue-900";
