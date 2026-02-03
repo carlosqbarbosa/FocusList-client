@@ -40,7 +40,7 @@
     </div>
     
     <div v-if="overdueTasks.length > 0" class="overdue-section">
-      <h4 class="overdue-title">⚠️ Tasks Atrasadas</h4>
+      <h4 class="overdue-title"> Tasks Atrasadas</h4>
       <div class="task-list">
         <div 
           v-for="task in overdueTasks" 
@@ -128,6 +128,7 @@ onMounted(loadData);
 }
 
 .title {
+  text-align: center;
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;

@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('auth', {
 
       } catch (error) {
         console.error('Erro no login:', error)
-        return false
+        throw error
       } finally {
         this.carregando = false
       }
