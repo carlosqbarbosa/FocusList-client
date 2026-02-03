@@ -41,7 +41,8 @@ export const useAuthStore = defineStore('auth', {
 
       } catch (error) {
         console.error('Erro no login:', error)
-         throw error
+        TesteDash
+        throw error
       } finally {
         this.carregando = false
       }
