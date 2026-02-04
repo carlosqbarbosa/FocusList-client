@@ -27,7 +27,8 @@
                 </button>
                 <button 
                   @click="saveSettings"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all shadow-sm flex items-center gap-2"
+                  :disabled="!canSave"
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span v-if="saving">Salvando...</span>
                   <span v-else>Salvar Alterações</span>
@@ -77,15 +78,56 @@
                   />
                 </div>
 
-                <div class="space-y-1 md:col-span-2">
+                <div class="space-y-1">
                   <label class="text-sm font-medium text-gray-700">Email</label>
                   <input 
                     v-model="form.email" 
                     type="email" 
                     class="input-field" 
-                    disabled 
+                    :disabled="!editMode" 
                   />
-                  <p class="text-xs text-gray-400">Email não pode ser alterado</p>
+                  <p v-if="editMode && !emailChanged" class="text-xs text-gray-500">
+                    Seu email atual
+                  </p>
+                  <p v-if="editMode && emailChanged" class="text-xs text-amber-600 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    Ao alterar o email, você precisará confirmar o novo endereço
+                  </p>
+                </div>
+
+                <div v-if="editMode && emailChanged" class="space-y-1">
+                  <label class="text-sm font-medium text-gray-700">Confirmar Novo Email</label>
+                  <input 
+                    v-model="form.emailConfirmation" 
+                    type="email" 
+                    class="input-field" 
+                    placeholder="Digite o email novamente"
+                  />
+                  <p v-if="emailMismatch" class="text-xs text-red-600 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Os emails não coincidem
+                  </p>
+                  <p v-else-if="form.emailConfirmation" class="text-xs text-green-600 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Os emails coincidem
+                  </p>
+                </div>
+
+                <div v-if="editMode && emailChanged" class="space-y-1 md:col-span-2">
+                  <label class="text-sm font-medium text-gray-700">Senha Atual (para confirmar a alteração)</label>
+                  <input 
+                    v-model="form.senhaAtual" 
+                    type="password" 
+                    class="input-field" 
+                    placeholder="Digite sua senha para confirmar"
+                  />
+                  <p class="text-xs text-gray-500">Por segurança, precisamos confirmar sua identidade</p>
                 </div>
               </div>
             </div>
@@ -142,6 +184,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useAuthStore } from '@/store/auth.store';
+import userService from '@/services/user.service';
 import Sidebar from "../components/layout/Sidebar.vue";
 import TheHeader from "../components/layout/TheHeader.vue";
 
@@ -153,6 +196,8 @@ const form = reactive({
   nome: '',
   sobrenome: '',
   email: '',
+  emailConfirmation: '',
+  senhaAtual: '',
   notifications: {
     tasks: true,
     pomodoro: false
@@ -163,6 +208,24 @@ const originalData = ref({});
 
 const userAvatar = computed(() => {
   return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + authStore.usuario?.email
+})
+
+const emailChanged = computed(() => {
+  return form.email !== originalData.value.email && form.email.trim() !== '';
+})
+
+const emailMismatch = computed(() => {
+  return emailChanged.value && 
+         form.emailConfirmation && 
+         form.email !== form.emailConfirmation;
+})
+
+const canSave = computed(() => {
+  
+  if (!emailChanged.value) return true;
+  return form.emailConfirmation && 
+         !emailMismatch.value && 
+         form.senhaAtual.trim() !== '';
 })
 
 onMounted(() => {
@@ -192,6 +255,7 @@ const loadUserData = () => {
     originalData.value = {
       nome: form.nome,
       sobrenome: form.sobrenome,
+      email: form.email,
       notifications: { ...form.notifications }
     }
   }
@@ -204,34 +268,78 @@ const enableEditMode = () => {
 const cancelEdit = () => {
   form.nome = originalData.value.nome;
   form.sobrenome = originalData.value.sobrenome;
+  form.email = originalData.value.email;
+  form.emailConfirmation = '';
+  form.senhaAtual = '';
   form.notifications = { ...originalData.value.notifications };
   editMode.value = false;
 }
 
-const saveSettings = () => {
+const saveSettings = async () => {
+  if (!canSave.value) {
+    alert('Por favor, preencha todos os campos obrigatórios');
+    return;
+  }
+
   saving.value = true;
   
-  setTimeout(() => {
+  try {
+    let emailAlterado = false;
 
-    authStore.updateUser({
-      nome: form.nome,
-      sobrenome: form.sobrenome
-    })
-    
-    authStore.updatePreferences({
-      notifications: form.notifications
-    })
-    
+    if (form.nome !== originalData.value.nome || form.sobrenome !== originalData.value.sobrenome) {
+      const profileResponse = await userService.updateProfile({
+        nome: form.nome,
+        sobrenome: form.sobrenome
+      });
+
+      authStore.updateUser(profileResponse.data.data.usuario);
+    }
+
+    if (emailChanged.value) {
+      const emailResponse = await userService.updateEmail({
+        novoEmail: form.email,
+        senhaAtual: form.senhaAtual
+      });
+
+      authStore.updateUser(emailResponse.data.data.usuario);
+      emailAlterado = true;
+    }
+
+    if (JSON.stringify(form.notifications) !== JSON.stringify(originalData.value.notifications)) {
+      await userService.updatePreferences({
+        notifications: form.notifications
+      });
+
+      authStore.updatePreferences({
+        notifications: form.notifications
+      });
+    }
+
     originalData.value = {
       nome: form.nome,
       sobrenome: form.sobrenome,
+      email: form.email,
       notifications: { ...form.notifications }
     }
     
+    form.emailConfirmation = '';
+    form.senhaAtual = '';
+    
     saving.value = false;
     editMode.value = false;
-    alert('Configurações salvas com sucesso! ✨');
-  }, 1000);
+    
+    if (emailAlterado) {
+      alert(' Email atualizado com sucesso!');
+    } else {
+      alert(' Configurações salvas com sucesso!');
+    }
+  } catch (error) {
+    saving.value = false;
+    console.error('Erro ao salvar:', error);
+    
+    const errorMessage = error.response?.data?.error || 'Erro ao salvar as configurações';
+    alert( errorMessage);
+  }
 };
 </script>
 

@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAuthenticated: (state) => state.autenticado,
+    currentUser: (state) => state.usuario,
   },
 
   actions: {
@@ -37,18 +38,13 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('usuario', JSON.stringify(data.usuario))
         localStorage.setItem('refreshToken', data.refreshToken)
 
-        return true
-
       } catch (error) {
         console.error('Erro no login:', error)
-        TesteDash
         throw error
       } finally {
         this.carregando = false
       }
     },
-
-
 
     async register(dados) {
       this.carregando = true
@@ -81,20 +77,41 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    updateUser(userData) {
+      if (this.usuario) {
+        this.usuario = {
+          ...this.usuario,
+          ...userData
+        };
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+      }
+    },
 
+    updatePreferences(preferences) {
+      if (this.usuario) {
+        this.usuario.preferences = {
+          ...this.usuario.preferences,
+          ...preferences
+        };
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+      }
+    },
 
     carregarDoStorage() {
       const token = localStorage.getItem('token')
       const usuario = localStorage.getItem('usuario')
 
       if (token && usuario) {
-        this.token = token
-        this.usuario = JSON.parse(usuario)
-        this.autenticado = true
+        try {
+          this.token = token
+          this.usuario = JSON.parse(usuario)
+          this.autenticado = true
+        } catch (error) {
+          console.error('Erro ao carregar dados do localStorage:', error)
+          this.logout()
+        }
       }
     },
-
-
 
     logout() {
       this.usuario = null
