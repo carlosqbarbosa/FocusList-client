@@ -3,12 +3,16 @@
     class="bg-blue-900 text-white w-60 min-h-screen p-4 flex flex-col justify-between shadow-lg"
   >
     <div>
-      <div class="flex items-center gap-2 mb-8">
+     <!-- <div class="flex items-center gap-2 mb-8">
+        
         <img
           :src="userAvatar"
           alt="User"
           class="rounded-full w-10 h-10 object-cover"
-        />
+        
+        <span class="font-medium">{{ userName }}</span>
+      </div> -->
+      <div class="flex items-center gap-2 mb-8 px-4">
         <span class="font-medium">{{ userName }}</span>
       </div>
 
@@ -92,9 +96,10 @@ const userName = computed(() => {
   return 'Usuário'
 })
 
+/* 
 const userAvatar = computed(() => {
   return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'
-})
+})*/
 
 function linkClass(path) {
   return route.path === path

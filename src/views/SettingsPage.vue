@@ -41,6 +41,8 @@
             <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Meu Perfil</h2>
             
             <div class="flex flex-col md:flex-row gap-8 items-start">
+              
+              <!--
               <div class="flex flex-col items-center gap-3">
                 <div class="relative group" :class="editMode ? 'cursor-pointer' : 'cursor-default'">
                   <img 
@@ -56,6 +58,7 @@
                   </div>
                 </div>
               </div>
+              -->
 
               <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 <div class="space-y-1">
@@ -86,15 +89,6 @@
                     class="input-field" 
                     :disabled="!editMode" 
                   />
-                  <p v-if="editMode && !emailChanged" class="text-xs text-gray-500">
-                    Seu email atual
-                  </p>
-                  <p v-if="editMode && emailChanged" class="text-xs text-amber-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                    Ao alterar o email, você precisará confirmar o novo endereço
-                  </p>
                 </div>
 
                 <div v-if="editMode && emailChanged" class="space-y-1">
@@ -105,18 +99,6 @@
                     class="input-field" 
                     placeholder="Digite o email novamente"
                   />
-                  <p v-if="emailMismatch" class="text-xs text-red-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                    Os emails não coincidem
-                  </p>
-                  <p v-else-if="form.emailConfirmation" class="text-xs text-green-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    Os emails coincidem
-                  </p>
                 </div>
 
                 <div v-if="editMode && emailChanged" class="space-y-1 md:col-span-2">
@@ -127,12 +109,12 @@
                     class="input-field" 
                     placeholder="Digite sua senha para confirmar"
                   />
-                  <p class="text-xs text-gray-500">Por segurança, precisamos confirmar sua identidade</p>
                 </div>
               </div>
             </div>
           </div>
 
+          <!--
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Notificações</h2>
@@ -164,6 +146,7 @@
               </div>
             </div>
           </div>
+          -->
 
           <div class="bg-red-50 rounded-2xl border border-red-100 p-6">
             <h2 class="text-lg font-semibold text-red-700 mb-2">Área de Risco</h2>
@@ -197,18 +180,22 @@ const form = reactive({
   sobrenome: '',
   email: '',
   emailConfirmation: '',
-  senhaAtual: '',
+  senhaAtual: ''
+  /*
   notifications: {
     tasks: true,
     pomodoro: false
   }
+  */
 });
 
 const originalData = ref({});
 
+/*
 const userAvatar = computed(() => {
   return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + authStore.usuario?.email
 })
+*/
 
 const emailChanged = computed(() => {
   return form.email !== originalData.value.email && form.email.trim() !== '';
@@ -221,7 +208,6 @@ const emailMismatch = computed(() => {
 })
 
 const canSave = computed(() => {
-  
   if (!emailChanged.value) return true;
   return form.emailConfirmation && 
          !emailMismatch.value && 
@@ -233,30 +219,15 @@ onMounted(() => {
 })
 
 const loadUserData = () => {
-  console.log('=== CARREGANDO DADOS DO USUÁRIO ===')
-  console.log('authStore.usuario:', authStore.usuario)
-  
   if (authStore.usuario) {
     form.nome = authStore.usuario.nome || ''
     form.sobrenome = authStore.usuario.sobrenome || ''
     form.email = authStore.usuario.email || ''
-    
-    if (authStore.usuario.preferences?.notifications) {
-      form.notifications = { ...authStore.usuario.preferences.notifications }
-    }
-    
-    console.log('Dados carregados no form:', {
-      nome: form.nome,
-      sobrenome: form.sobrenome,
-      email: form.email,
-      notifications: form.notifications
-    })
-    
+
     originalData.value = {
       nome: form.nome,
       sobrenome: form.sobrenome,
-      email: form.email,
-      notifications: { ...form.notifications }
+      email: form.email
     }
   }
 }
@@ -271,7 +242,6 @@ const cancelEdit = () => {
   form.email = originalData.value.email;
   form.emailConfirmation = '';
   form.senhaAtual = '';
-  form.notifications = { ...originalData.value.notifications };
   editMode.value = false;
 }
 
@@ -305,21 +275,10 @@ const saveSettings = async () => {
       emailAlterado = true;
     }
 
-    if (JSON.stringify(form.notifications) !== JSON.stringify(originalData.value.notifications)) {
-      await userService.updatePreferences({
-        notifications: form.notifications
-      });
-
-      authStore.updatePreferences({
-        notifications: form.notifications
-      });
-    }
-
     originalData.value = {
       nome: form.nome,
       sobrenome: form.sobrenome,
-      email: form.email,
-      notifications: { ...form.notifications }
+      email: form.email
     }
     
     form.emailConfirmation = '';
@@ -329,20 +288,17 @@ const saveSettings = async () => {
     editMode.value = false;
     
     if (emailAlterado) {
-      alert(' Email atualizado com sucesso!');
+      alert('Email atualizado com sucesso!');
     } else {
-      alert(' Configurações salvas com sucesso!');
+      alert('Configurações salvas com sucesso!');
     }
   } catch (error) {
     saving.value = false;
-    console.error('Erro ao salvar:', error);
-    
     const errorMessage = error.response?.data?.error || 'Erro ao salvar as configurações';
-    alert( errorMessage);
+    alert(errorMessage);
   }
 };
 </script>
-
 <style scoped>
 .input-field {
   @apply w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all text-gray-700;
