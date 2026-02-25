@@ -152,7 +152,9 @@
             <h2 class="text-lg font-semibold text-red-700 mb-2">Área de Risco</h2>
             <div class="flex items-center justify-between">
               <p class="text-sm text-red-600">Deseja excluir sua conta permanentemente? Esta ação não pode ser desfeita.</p>
-              <button class="text-red-600 hover:text-red-800 text-sm font-semibold underline decoration-2 underline-offset-2">
+              <button 
+              @click="handleDeleteAccount"
+              class="text-red-600 hover:text-red-800 text-sm font-semibold underline decoration-2 underline-offset-2">
                 Excluir Conta
               </button>
             </div>
@@ -165,139 +167,163 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
-import { useAuthStore } from '@/store/auth.store';
-import userService from '@/services/user.service';
-import Sidebar from "../components/layout/Sidebar.vue";
-import TheHeader from "../components/layout/TheHeader.vue";
+  import { ref, reactive, computed, onMounted } from 'vue';
+  import { useAuthStore } from '@/store/auth.store';
+  import { useRouter } from 'vue-router';
+  import userService from '@/services/user.service';
+  import Sidebar from "../components/layout/Sidebar.vue";
+  import TheHeader from "../components/layout/TheHeader.vue";
 
-const authStore = useAuthStore();
-const saving = ref(false);
-const editMode = ref(false);
+  const authStore = useAuthStore();
+  const saving = ref(false);
+  const editMode = ref(false);
+  const router = useRouter();
 
-const form = reactive({
-  nome: '',
-  sobrenome: '',
-  email: '',
-  emailConfirmation: '',
-  senhaAtual: ''
+  const form = reactive({
+    nome: '',
+    sobrenome: '',
+    email: '',
+    emailConfirmation: '',
+    senhaAtual: ''
+    /*
+    notifications: {
+      tasks: true,
+      pomodoro: false
+    }
+    */
+  });
+
+  const originalData = ref({});
+
   /*
-  notifications: {
-    tasks: true,
-    pomodoro: false
-  }
+  const userAvatar = computed(() => {
+    return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + authStore.usuario?.email
+  })
   */
-});
 
-const originalData = ref({});
+  const emailChanged = computed(() => {
+    return form.email !== originalData.value.email && form.email.trim() !== '';
+  })
 
-/*
-const userAvatar = computed(() => {
-  return authStore.usuario?.urlFotoPerfil || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + authStore.usuario?.email
-})
-*/
+  const emailMismatch = computed(() => {
+    return emailChanged.value && 
+          form.emailConfirmation && 
+          form.email !== form.emailConfirmation;
+  })
 
-const emailChanged = computed(() => {
-  return form.email !== originalData.value.email && form.email.trim() !== '';
-})
+  const canSave = computed(() => {
+    if (!emailChanged.value) return true;
+    return form.emailConfirmation && 
+          !emailMismatch.value && 
+          form.senhaAtual.trim() !== '';
+  })
 
-const emailMismatch = computed(() => {
-  return emailChanged.value && 
-         form.emailConfirmation && 
-         form.email !== form.emailConfirmation;
-})
+  onMounted(() => {
+    loadUserData();
+  })
 
-const canSave = computed(() => {
-  if (!emailChanged.value) return true;
-  return form.emailConfirmation && 
-         !emailMismatch.value && 
-         form.senhaAtual.trim() !== '';
-})
+  const loadUserData = () => {
+    if (authStore.usuario) {
+      form.nome = authStore.usuario.nome || ''
+      form.sobrenome = authStore.usuario.sobrenome || ''
+      form.email = authStore.usuario.email || ''
 
-onMounted(() => {
-  loadUserData();
-})
-
-const loadUserData = () => {
-  if (authStore.usuario) {
-    form.nome = authStore.usuario.nome || ''
-    form.sobrenome = authStore.usuario.sobrenome || ''
-    form.email = authStore.usuario.email || ''
-
-    originalData.value = {
-      nome: form.nome,
-      sobrenome: form.sobrenome,
-      email: form.email
-    }
-  }
-}
-
-const enableEditMode = () => {
-  editMode.value = true;
-}
-
-const cancelEdit = () => {
-  form.nome = originalData.value.nome;
-  form.sobrenome = originalData.value.sobrenome;
-  form.email = originalData.value.email;
-  form.emailConfirmation = '';
-  form.senhaAtual = '';
-  editMode.value = false;
-}
-
-const saveSettings = async () => {
-  if (!canSave.value) {
-    alert('Por favor, preencha todos os campos obrigatórios');
-    return;
-  }
-
-  saving.value = true;
-  
-  try {
-    let emailAlterado = false;
-
-    if (form.nome !== originalData.value.nome || form.sobrenome !== originalData.value.sobrenome) {
-      const profileResponse = await userService.updateProfile({
+      originalData.value = {
         nome: form.nome,
-        sobrenome: form.sobrenome
-      });
-
-      authStore.updateUser(profileResponse.data.data.usuario);
+        sobrenome: form.sobrenome,
+        email: form.email
+      }
     }
+  }
 
-    if (emailChanged.value) {
-      const emailResponse = await userService.updateEmail({
-        novoEmail: form.email,
-        senhaAtual: form.senhaAtual
-      });
+  const enableEditMode = () => {
+    editMode.value = true;
+  }
 
-      authStore.updateUser(emailResponse.data.data.usuario);
-      emailAlterado = true;
-    }
-
-    originalData.value = {
-      nome: form.nome,
-      sobrenome: form.sobrenome,
-      email: form.email
-    }
-    
+  const cancelEdit = () => {
+    form.nome = originalData.value.nome;
+    form.sobrenome = originalData.value.sobrenome;
+    form.email = originalData.value.email;
     form.emailConfirmation = '';
     form.senhaAtual = '';
-    
-    saving.value = false;
     editMode.value = false;
-    
-    if (emailAlterado) {
-      alert('Email atualizado com sucesso!');
-    } else {
-      alert('Configurações salvas com sucesso!');
-    }
-  } catch (error) {
-    saving.value = false;
-    const errorMessage = error.response?.data?.error || 'Erro ao salvar as configurações';
-    alert(errorMessage);
   }
-};
+
+  const saveSettings = async () => {
+    if (!canSave.value) {
+      alert('Por favor, preencha todos os campos obrigatórios');
+      return;
+    }
+
+    saving.value = true;
+    
+    try {
+      let emailAlterado = false;
+
+      if (form.nome !== originalData.value.nome || form.sobrenome !== originalData.value.sobrenome) {
+        const profileResponse = await userService.updateProfile({
+          nome: form.nome,
+          sobrenome: form.sobrenome
+        });
+
+        authStore.updateUser(profileResponse.data.data.usuario);
+      }
+
+      if (emailChanged.value) {
+        const emailResponse = await userService.updateEmail({
+          novoEmail: form.email,
+          senhaAtual: form.senhaAtual
+        });
+
+        authStore.updateUser(emailResponse.data.data.usuario);
+        emailAlterado = true;
+      }
+
+      originalData.value = {
+        nome: form.nome,
+        sobrenome: form.sobrenome,
+        email: form.email
+      }
+      
+      form.emailConfirmation = '';
+      form.senhaAtual = '';
+      
+      saving.value = false;
+      editMode.value = false;
+      
+      if (emailAlterado) {
+        alert('Email atualizado com sucesso!');
+      } else {
+        alert('Configurações salvas com sucesso!');
+      }
+    } catch (error) {
+      saving.value = false;
+      const errorMessage = error.response?.data?.error || 'Erro ao salvar as configurações';
+      alert(errorMessage);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmacao = confirm(
+      "Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita."
+    );
+
+    if (!confirmacao) return;
+
+    try {
+      await userService.deleteAccount();
+
+      alert("Conta excluída com sucesso.");
+
+      authStore.logout(); 
+
+      router.push("/login");
+
+    } catch (error) {
+      alert("Erro ao excluir conta.");
+      console.error(error);
+    }
+  };
 </script>
 <style scoped>
 .input-field {
