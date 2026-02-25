@@ -46,7 +46,7 @@
             <option>Baixa</option>
           </select>
         </div>
-
+        <!--
         <div>
           <label class="block font-medium mb-1">Descrição</label>
           <textarea
@@ -54,7 +54,7 @@
             class="w-full border rounded px-3 py-2"
             rows="3"
           ></textarea>
-        </div>
+        </div>-->
       </div>
 
       <div class="flex justify-end gap-3 mt-6">

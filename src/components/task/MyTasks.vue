@@ -61,9 +61,10 @@
 
             <td class="py-3 px-6 border-b text-center">
               <div class="flex justify-center gap-3">
+                <!--
                 <button @click="openDetailsModal(task)" class="bg-blue-900 text-white px-3 py-1 rounded hover:bg-blue-800 transition">
                   Ver detalhes
-                </button>
+                </button>-->
 
                 <button @click="openEditModal(task)" class="bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-700 transition">
                   Editar

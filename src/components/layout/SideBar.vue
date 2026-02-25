@@ -11,10 +11,7 @@
           class="rounded-full w-10 h-10 object-cover"
         
         <span class="font-medium">{{ userName }}</span>
-      </div> -->
-      <div class="flex items-center gap-2 mb-8 px-4">
-        <span class="font-medium">{{ userName }}</span>
-      </div>
+      </div>  -->
 
         <router-link to="/pomodoro" :class="linkClass('/pomodoro')">
           <div class="flex items-center gap-2">
@@ -44,13 +41,13 @@
             <span>Configurações</span>
           </div>
         </router-link>
-
+        <!--
         <router-link to="/help" :class="linkClass('/help')">
           <div class="flex items-center gap-2">
             <HelpCircle class="w-5 h-5" />
             <span>Suporte</span>
           </div>
-        </router-link>
+        </router-link>-->
       </nav>
     </div>
 

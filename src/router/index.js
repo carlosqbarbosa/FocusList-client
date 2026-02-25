@@ -42,11 +42,12 @@ const routes = [
     component: SettingsPage,
     meta: { requiresAuth: true }
   },
+  /** 
   {
     path: '/help',
     component: () => import('../views/HelpPage.vue'),
     meta: { requiresAuth: true }
-  }
+  }*/
 ]
 
 const router = createRouter({

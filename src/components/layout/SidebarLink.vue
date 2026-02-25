@@ -18,10 +18,10 @@
       <router-link to="/settings" :class="linkClass('/settings')">
         Configuraçãos
       </router-link>
-
+      <!--
       <router-link to="/help" :class="linkClass('/help')">
         Suporte
-      </router-link>
+      </router-link>-->
     </div>
 
     <button
