@@ -44,7 +44,7 @@ const routes = [
   },
   /** 
   {
-    path: '/help',
+    path: '/help', //feature futura
     component: () => import('../views/HelpPage.vue'),
     meta: { requiresAuth: true }
   }*/
