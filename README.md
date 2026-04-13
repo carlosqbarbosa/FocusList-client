@@ -23,7 +23,7 @@ O **FocusList Frontend** é a interface web da aplicação FocusList, desenvolvi
 
 ##  Sobre o Projeto
 
-O frontend do FocusList foi desenvolvido como uma **Single Page Application (SPA)** utilizando Vue 3 com Vite, garantindo alta performance e uma excelente experiência de usuário.
+O frontend do FocusList foi desenvolvido utilizando Vue 3 com Vite, garantindo alta performance e uma excelente experiência de usuário.
 
 A aplicação consome uma API REST própria para autenticação e gerenciamento de tarefas, com sistema de login via JWT.
 
